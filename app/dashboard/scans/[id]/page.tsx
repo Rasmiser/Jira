@@ -4,6 +4,7 @@ import { getScan, getFindings } from "@/app/actions/scans"
 import { RiskGauge } from "@/components/dashboard/risk-gauge"
 import { FindingsList } from "@/components/dashboard/findings-list"
 import { DeleteScanButton } from "@/components/dashboard/delete-scan-button"
+import { SendToJiraButton } from "@/components/dashboard/send-to-jira-button"
 import { cn } from "@/lib/utils"
 import {
   ArrowLeft,
@@ -34,6 +35,7 @@ export default async function ScanReportPage({
   if (!scan) notFound()
 
   const findings = await getFindings(id)
+  const syncedCount = findings.filter((f) => f.jiraIssueKey).length
 
   const severityCounts = [
     { label: "Critical", value: scan.criticalCount, color: "text-red-400" },
@@ -74,7 +76,14 @@ export default async function ScanReportPage({
               </p>
             </div>
           </div>
-          <DeleteScanButton scanId={scan.id} />
+          <div className="flex flex-col items-start gap-3 sm:items-end">
+            <SendToJiraButton
+              scanId={scan.id}
+              syncedCount={syncedCount}
+              totalFindings={findings.length}
+            />
+            <DeleteScanButton scanId={scan.id} />
+          </div>
         </div>
 
         {/* Severity breakdown */}

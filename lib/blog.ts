@@ -178,9 +178,13 @@ export function getPostBySlug(slug: string): BlogPost | undefined {
 }
 
 export function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", {
+  // Parse the date parts manually and format in UTC so the output is identical
+  // on the server and client regardless of the local timezone (avoids hydration mismatch).
+  const [year, month, day] = iso.split("-").map(Number)
+  return new Date(Date.UTC(year, month - 1, day)).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
+    timeZone: "UTC",
   })
 }
