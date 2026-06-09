@@ -3,6 +3,7 @@
 import { SiteHeader } from "@/components/marketing/site-header"
 import { Hero } from "@/components/marketing/hero"
 import { Features } from "@/components/marketing/features"
+import { Services } from "@/components/marketing/services"
 import { HowItWorks } from "@/components/marketing/how-it-works"
 import { Pricing } from "@/components/marketing/pricing"
 import { Testimonials } from "@/components/marketing/testimonials"
@@ -21,6 +22,7 @@ export default function Home() {
       <SiteHeader />
       <Hero ctaHref={ctaHref} />
       <Features />
+      <Services />
       <HowItWorks />
       <Pricing ctaHref={ctaHref} />
       <Testimonials />
