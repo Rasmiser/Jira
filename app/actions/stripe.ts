@@ -19,6 +19,31 @@ function getBaseUrl() {
 }
 
 /**
+ * Switches the user to any plan without payment. All plans are currently free
+ * during open access, so there is no checkout step — we just update the row.
+ */
+export async function selectPlan(planId: PlanId) {
+  const session = await getSession()
+  if (!session?.user) throw new Error("Unauthorized")
+
+  if (!PLANS[planId]) throw new Error("Invalid plan")
+
+  await getOrCreateSubscription(session.user.id)
+
+  await db
+    .update(subscriptions)
+    .set({
+      plan: planId,
+      status: "active",
+      updatedAt: new Date(),
+    })
+    .where(eq(subscriptions.userId, session.user.id))
+
+  revalidatePath("/dashboard")
+  revalidatePath("/dashboard/billing")
+}
+
+/**
  * Creates a hosted Stripe Checkout session for a subscription plan and returns
  * its URL. Plan prices are created inline so no Stripe dashboard setup is needed.
  */

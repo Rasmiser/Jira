@@ -80,8 +80,8 @@ export default async function BillingPage({
         </div>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          Payments are processed securely by Stripe. Use test card 4242 4242 4242
-          4242 with any future expiry and CVC.
+          All plans are free during open access — every plan includes unlimited
+          scans. Switch anytime, no payment required.
         </p>
       </div>
     </div>

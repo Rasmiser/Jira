@@ -16,11 +16,11 @@ export const PLANS: Record<PlanId, Plan> = {
   free: {
     id: "free",
     name: "Free",
-    description: "For trying out RASMISER on a single app.",
+    description: "Everything unlocked — test as much as you want, for free.",
     priceInCents: 0,
-    scanLimit: 3,
+    scanLimit: null,
     features: [
-      "3 scans per month",
+      "Unlimited scans",
       "Static analysis (MobSF engine)",
       "OWASP MASVS findings",
       "Community support",
@@ -29,11 +29,11 @@ export const PLANS: Record<PlanId, Plan> = {
   pro: {
     id: "pro",
     name: "Pro",
-    description: "For indie developers and small teams shipping regularly.",
-    priceInCents: 4900,
-    scanLimit: 50,
+    description: "All Pro capabilities, now free during open access.",
+    priceInCents: 0,
+    scanLimit: null,
     features: [
-      "50 scans per month",
+      "Unlimited scans",
       "Static & dynamic analysis",
       "AI-generated remediation reports",
       "PDF & SARIF export",
@@ -43,8 +43,8 @@ export const PLANS: Record<PlanId, Plan> = {
   team: {
     id: "team",
     name: "Team",
-    description: "For security teams with continuous release pipelines.",
-    priceInCents: 19900,
+    description: "All Team capabilities, now free during open access.",
+    priceInCents: 0,
     scanLimit: null,
     features: [
       "Unlimited scans",

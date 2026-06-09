@@ -2,7 +2,10 @@ import React from "react"
 import type { Metadata } from 'next'
 import { Instrument_Sans, Instrument_Serif, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { getSiteUrl } from '@/lib/site'
 import './globals.css'
+
+const siteUrl = getSiteUrl()
 
 const instrumentSans = Instrument_Sans({ 
   subsets: ["latin"],
@@ -21,8 +24,49 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'RASMISER - Mobile App Security Scanning',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'RASMISER - Mobile App Security Scanning',
+    template: '%s | RASMISER',
+  },
   description: 'Upload your Android or iOS build and get a full OWASP MASVS security report in minutes. Find vulnerabilities before attackers do.',
+  applicationName: 'RASMISER',
+  keywords: [
+    'mobile app security',
+    'OWASP MASVS',
+    'Android security scan',
+    'iOS security scan',
+    'app penetration testing',
+    'vulnerability scanning',
+    'mobile app testing',
+  ],
+  authors: [{ name: 'RASMISER' }],
+  alternates: {
+    canonical: '/',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    siteName: 'RASMISER',
+    url: siteUrl,
+    title: 'RASMISER - Mobile App Security Scanning',
+    description: 'Upload your Android or iOS build and get a full OWASP MASVS security report in minutes. Find vulnerabilities before attackers do.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'RASMISER - Mobile App Security Scanning',
+    description: 'Upload your Android or iOS build and get a full OWASP MASVS security report in minutes. Find vulnerabilities before attackers do.',
+  },
   generator: 'v0.app',
 }
 

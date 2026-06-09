@@ -2,15 +2,13 @@
 
 import { headers } from "next/headers"
 import { revalidatePath } from "next/cache"
-import { and, eq, isNotNull } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { scans, findings } from "@/lib/db/schema"
 import { getUserId } from "@/lib/subscription"
 import {
   createJiraIssueForFinding,
-  getJiraIssueStatuses,
   isJiraConfigured,
-  JIRA_PROJECT_KEY,
 } from "@/lib/jira"
 import { notifySlackFindingsPushed } from "@/lib/slack"
 
@@ -24,6 +22,8 @@ async function getBaseUrl() {
 export interface SyncResult {
   ok: boolean
   error?: "not_configured" | "no_findings" | "failed"
+  /** Human-readable detail surfaced to the UI when something goes wrong. */
+  message?: string
   created?: number
   skipped?: number
   slackNotified?: boolean
@@ -99,9 +99,10 @@ export async function pushScanToJira(scanId: string): Promise<SyncResult> {
     }
   } catch (err) {
     console.error("[v0] pushScanToJira failed:", err)
+    const detail = extractJiraError(err)
     // Surface partial success: some issues may have been created.
     if (createdIssues.length === 0) {
-      return { ok: false, error: "failed" }
+      return { ok: false, error: "failed", message: detail }
     }
   }
 
@@ -110,7 +111,7 @@ export async function pushScanToJira(scanId: string): Promise<SyncResult> {
     appName: scan.appName,
     scanId,
     reportUrl: `${baseUrl}/dashboard/scans/${scanId}`,
-    boardUrl: `${baseUrl}/dashboard/board`,
+    boardUrl: `${baseUrl}/dashboard/scans/${scanId}`,
     issues: createdIssues,
     counts: {
       critical: createdIssues.filter((i) => i.severity === "critical").length,
@@ -121,7 +122,6 @@ export async function pushScanToJira(scanId: string): Promise<SyncResult> {
   })
 
   revalidatePath(`/dashboard/scans/${scanId}`)
-  revalidatePath("/dashboard/board")
 
   return {
     ok: true,
@@ -131,121 +131,37 @@ export async function pushScanToJira(scanId: string): Promise<SyncResult> {
   }
 }
 
-export interface BoardCard {
-  id: string
-  scanId: string
-  appName: string
-  title: string
-  severity: string
-  category: string
-  jiraIssueKey: string
-  jiraIssueUrl: string
-  jiraStatus: string
-}
-
-export interface BoardColumn {
-  id: string
-  title: string
-  cards: BoardCard[]
-}
-
 /**
- * Returns all of the user's Jira-synced findings grouped into Kanban columns by
- * their live Jira status category (To Do / In Progress / Done). Statuses are
- * refreshed from Jira on each load and persisted back to the database.
+ * Pulls the most useful human-readable message out of a jira.js / Axios error
+ * so the UI can tell the user exactly what went wrong (auth, project key,
+ * issue type, permissions, etc.) instead of a generic failure.
  */
-export async function getJiraBoard(): Promise<{
-  configured: boolean
-  projectKey: string
-  columns: BoardColumn[]
-  total: number
-}> {
-  const userId = await getUserId()
-
-  const baseColumns: BoardColumn[] = [
-    { id: "todo", title: "To Do", cards: [] },
-    { id: "inprogress", title: "In Progress", cards: [] },
-    { id: "done", title: "Done", cards: [] },
-  ]
-
-  if (!isJiraConfigured()) {
-    return { configured: false, projectKey: "", columns: baseColumns, total: 0 }
-  }
-
-  // All synced findings for this user, joined to their scan for the app name.
-  const rows = await db
-    .select({
-      id: findings.id,
-      scanId: findings.scanId,
-      title: findings.title,
-      severity: findings.severity,
-      category: findings.category,
-      jiraIssueKey: findings.jiraIssueKey,
-      jiraIssueUrl: findings.jiraIssueUrl,
-      jiraStatus: findings.jiraStatus,
-      appName: scans.appName,
-    })
-    .from(findings)
-    .innerJoin(scans, eq(findings.scanId, scans.id))
-    .where(and(eq(findings.userId, userId), isNotNull(findings.jiraIssueKey)))
-
-  if (rows.length === 0) {
-    return {
-      configured: true,
-      projectKey: JIRA_PROJECT_KEY,
-      columns: baseColumns,
-      total: 0,
+function extractJiraError(err: unknown): string {
+  const anyErr = err as {
+    response?: {
+      status?: number
+      data?: {
+        errorMessages?: string[]
+        errors?: Record<string, string>
+      }
     }
+    status?: number
+    message?: string
   }
 
-  // Refresh live statuses from Jira (best effort).
-  const keys = rows.map((r) => r.jiraIssueKey!).filter(Boolean)
-  let statuses: Awaited<ReturnType<typeof getJiraIssueStatuses>> = {}
-  try {
-    statuses = await getJiraIssueStatuses(keys)
-  } catch (err) {
-    console.error("[v0] getJiraIssueStatuses failed, using cached:", err)
-  }
+  const status = anyErr?.response?.status ?? anyErr?.status
+  const data = anyErr?.response?.data
 
-  for (const row of rows) {
-    const live = statuses[row.jiraIssueKey!]
-    const statusName = live?.status ?? row.jiraStatus ?? "To Do"
-    const category = live?.statusCategory ?? row.jiraStatus ?? "To Do"
+  const messages: string[] = []
+  if (data?.errorMessages?.length) messages.push(...data.errorMessages)
+  if (data?.errors) messages.push(...Object.values(data.errors))
 
-    // Persist refreshed status when it changed.
-    if (live && live.status !== row.jiraStatus) {
-      await db
-        .update(findings)
-        .set({ jiraStatus: live.status })
-        .where(and(eq(findings.id, row.id), eq(findings.userId, userId)))
-    }
+  if (messages.length) return messages.join(" ")
 
-    const card: BoardCard = {
-      id: row.id,
-      scanId: row.scanId,
-      appName: row.appName,
-      title: row.title,
-      severity: row.severity,
-      category: row.category,
-      jiraIssueKey: row.jiraIssueKey!,
-      jiraIssueUrl: row.jiraIssueUrl ?? "#",
-      jiraStatus: statusName,
-    }
+  if (status === 401) return "Jira authentication failed — check JIRA_EMAIL and JIRA_API_TOKEN."
+  if (status === 403) return "Jira denied access — the account lacks permission to create issues in this project."
+  if (status === 404) return "Jira project not found — check JIRA_PROJECT_KEY."
 
-    const cat = category.toLowerCase()
-    if (cat.includes("done") || cat.includes("complete")) {
-      baseColumns[2].cards.push(card)
-    } else if (cat.includes("progress")) {
-      baseColumns[1].cards.push(card)
-    } else {
-      baseColumns[0].cards.push(card)
-    }
-  }
-
-  return {
-    configured: true,
-    projectKey: JIRA_PROJECT_KEY,
-    columns: baseColumns,
-    total: rows.length,
-  }
+  return anyErr?.message || "Could not push to Jira."
 }
+
