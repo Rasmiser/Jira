@@ -139,6 +139,41 @@ export const threatEvents = pgTable("threat_events", {
   createdAt: timestamp("createdAt").notNull().defaultNow(),
 })
 
+// ---------------------------------------------------------------------------
+// Test suites — runnable QA testing tools (functional, compatibility,
+// performance, security, ui_ux, automation). Each run has many checks.
+// ---------------------------------------------------------------------------
+export const testRuns = pgTable("test_runs", {
+  id: text("id").primaryKey(),
+  userId: text("userId").notNull(),
+  testType: text("testType").notNull(), // functional | compatibility | performance | security | ui_ux | automation
+  appName: text("appName").notNull(),
+  platform: text("platform").notNull(), // android | ios | web | cross
+  target: text("target"), // optional URL / package / build identifier
+  status: text("status").notNull().default("completed"), // queued | running | completed | failed
+  score: integer("score"), // 0-100, higher = better
+  grade: text("grade"), // A-F
+  passCount: integer("passCount").notNull().default(0),
+  warnCount: integer("warnCount").notNull().default(0),
+  failCount: integer("failCount").notNull().default(0),
+  summary: text("summary"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  completedAt: timestamp("completedAt"),
+})
+
+export const testChecks = pgTable("test_checks", {
+  id: text("id").primaryKey(),
+  runId: text("runId").notNull(),
+  userId: text("userId").notNull(),
+  name: text("name").notNull(),
+  status: text("status").notNull(), // pass | warn | fail
+  category: text("category").notNull(),
+  detail: text("detail").notNull(),
+  metric: text("metric"), // optional measured value e.g. "1.8s" or "92%"
+  recommendation: text("recommendation"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+})
+
 export const subscriptions = pgTable("subscriptions", {
   id: text("id").primaryKey(),
   userId: text("userId").notNull().unique(),
