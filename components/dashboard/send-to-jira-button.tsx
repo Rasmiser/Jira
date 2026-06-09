@@ -2,9 +2,8 @@
 
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 import { pushScanToJira, type SyncResult } from "@/app/actions/jira"
-import { Loader2, Check, AlertTriangle, ExternalLink } from "lucide-react"
+import { Loader2, Check, AlertTriangle } from "lucide-react"
 
 const JIRA_MARK =
   "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2Ij48cGF0aCBkPSJNMjkuOTQgMTUuMDZMMTYuOTQgMi4wNkE0LjQgNC40IDAgMCAwIDE2IDEuMTl2NS43NWwwIC4wMSAwIDBhNi43MyA2LjczIDAgMCAwIDYuNzMgNi43M2g0LjQ0bDIuNzggMi43OGE0LjQgNC40IDAgMCAwIC0uMDEgLTEuNHoiIGZpbGw9IiMyNjg0ZmYiLz48cGF0aCBkPSJNMTYgNi45NWwwIC4wMUE2LjczIDYuNzMgMCAwIDAgMjIuNzMgMTMuN2g0LjQ0TDE2Ljk0IDIuMDZBNC40IDQuNCAwIDAgMCAxNiAxLjE5eiIgZmlsbD0iIzI2ODRmZiIvPjwvc3ZnPg=="
@@ -37,15 +36,6 @@ export function SendToJiraButton({
   return (
     <div className="flex flex-col items-start gap-2 sm:items-end">
       <div className="flex items-center gap-2">
-        {result?.ok && (
-          <Link
-            href="/dashboard/board"
-            className="inline-flex items-center gap-2 border border-border px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            View board
-            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-          </Link>
-        )}
         <button
           onClick={handlePush}
           disabled={pending || totalFindings === 0 || allSynced}

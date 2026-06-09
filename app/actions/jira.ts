@@ -2,15 +2,13 @@
 
 import { headers } from "next/headers"
 import { revalidatePath } from "next/cache"
-import { and, eq, isNotNull } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { scans, findings } from "@/lib/db/schema"
 import { getUserId } from "@/lib/subscription"
 import {
   createJiraIssueForFinding,
-  getJiraIssueStatuses,
   isJiraConfigured,
-  JIRA_PROJECT_KEY,
 } from "@/lib/jira"
 import { notifySlackFindingsPushed } from "@/lib/slack"
 
@@ -110,7 +108,7 @@ export async function pushScanToJira(scanId: string): Promise<SyncResult> {
     appName: scan.appName,
     scanId,
     reportUrl: `${baseUrl}/dashboard/scans/${scanId}`,
-    boardUrl: `${baseUrl}/dashboard/board`,
+    boardUrl: `${baseUrl}/dashboard/scans/${scanId}`,
     issues: createdIssues,
     counts: {
       critical: createdIssues.filter((i) => i.severity === "critical").length,
@@ -121,7 +119,6 @@ export async function pushScanToJira(scanId: string): Promise<SyncResult> {
   })
 
   revalidatePath(`/dashboard/scans/${scanId}`)
-  revalidatePath("/dashboard/board")
 
   return {
     ok: true,
@@ -131,121 +128,3 @@ export async function pushScanToJira(scanId: string): Promise<SyncResult> {
   }
 }
 
-export interface BoardCard {
-  id: string
-  scanId: string
-  appName: string
-  title: string
-  severity: string
-  category: string
-  jiraIssueKey: string
-  jiraIssueUrl: string
-  jiraStatus: string
-}
-
-export interface BoardColumn {
-  id: string
-  title: string
-  cards: BoardCard[]
-}
-
-/**
- * Returns all of the user's Jira-synced findings grouped into Kanban columns by
- * their live Jira status category (To Do / In Progress / Done). Statuses are
- * refreshed from Jira on each load and persisted back to the database.
- */
-export async function getJiraBoard(): Promise<{
-  configured: boolean
-  projectKey: string
-  columns: BoardColumn[]
-  total: number
-}> {
-  const userId = await getUserId()
-
-  const baseColumns: BoardColumn[] = [
-    { id: "todo", title: "To Do", cards: [] },
-    { id: "inprogress", title: "In Progress", cards: [] },
-    { id: "done", title: "Done", cards: [] },
-  ]
-
-  if (!isJiraConfigured()) {
-    return { configured: false, projectKey: "", columns: baseColumns, total: 0 }
-  }
-
-  // All synced findings for this user, joined to their scan for the app name.
-  const rows = await db
-    .select({
-      id: findings.id,
-      scanId: findings.scanId,
-      title: findings.title,
-      severity: findings.severity,
-      category: findings.category,
-      jiraIssueKey: findings.jiraIssueKey,
-      jiraIssueUrl: findings.jiraIssueUrl,
-      jiraStatus: findings.jiraStatus,
-      appName: scans.appName,
-    })
-    .from(findings)
-    .innerJoin(scans, eq(findings.scanId, scans.id))
-    .where(and(eq(findings.userId, userId), isNotNull(findings.jiraIssueKey)))
-
-  if (rows.length === 0) {
-    return {
-      configured: true,
-      projectKey: JIRA_PROJECT_KEY,
-      columns: baseColumns,
-      total: 0,
-    }
-  }
-
-  // Refresh live statuses from Jira (best effort).
-  const keys = rows.map((r) => r.jiraIssueKey!).filter(Boolean)
-  let statuses: Awaited<ReturnType<typeof getJiraIssueStatuses>> = {}
-  try {
-    statuses = await getJiraIssueStatuses(keys)
-  } catch (err) {
-    console.error("[v0] getJiraIssueStatuses failed, using cached:", err)
-  }
-
-  for (const row of rows) {
-    const live = statuses[row.jiraIssueKey!]
-    const statusName = live?.status ?? row.jiraStatus ?? "To Do"
-    const category = live?.statusCategory ?? row.jiraStatus ?? "To Do"
-
-    // Persist refreshed status when it changed.
-    if (live && live.status !== row.jiraStatus) {
-      await db
-        .update(findings)
-        .set({ jiraStatus: live.status })
-        .where(and(eq(findings.id, row.id), eq(findings.userId, userId)))
-    }
-
-    const card: BoardCard = {
-      id: row.id,
-      scanId: row.scanId,
-      appName: row.appName,
-      title: row.title,
-      severity: row.severity,
-      category: row.category,
-      jiraIssueKey: row.jiraIssueKey!,
-      jiraIssueUrl: row.jiraIssueUrl ?? "#",
-      jiraStatus: statusName,
-    }
-
-    const cat = category.toLowerCase()
-    if (cat.includes("done") || cat.includes("complete")) {
-      baseColumns[2].cards.push(card)
-    } else if (cat.includes("progress")) {
-      baseColumns[1].cards.push(card)
-    } else {
-      baseColumns[0].cards.push(card)
-    }
-  }
-
-  return {
-    configured: true,
-    projectKey: JIRA_PROJECT_KEY,
-    columns: baseColumns,
-    total: rows.length,
-  }
-}
