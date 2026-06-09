@@ -10,7 +10,8 @@ export function CtaSection({ ctaHref }: { ctaHref: string }) {
             Scan your first build in the next five minutes
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-pretty text-lg text-blue-100">
-            Join the teams catching vulnerabilities before attackers do. Start free, no credit card required.
+            Join the teams catching vulnerabilities before attackers do. Every feature is free — no credit card, no
+            plans, no limits.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
@@ -21,10 +22,10 @@ export function CtaSection({ ctaHref }: { ctaHref: string }) {
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <a
-              href="#pricing"
+              href="#features"
               className="inline-flex items-center gap-2 rounded-lg border border-blue-400 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
             >
-              View pricing
+              Explore features
             </a>
           </div>
         </div>

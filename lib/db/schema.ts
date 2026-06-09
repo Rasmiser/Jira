@@ -174,6 +174,14 @@ export const testChecks = pgTable("test_checks", {
   createdAt: timestamp("createdAt").notNull().defaultNow(),
 })
 
+// Newsletter signups from the public landing page (not user-scoped — anonymous)
+export const newsletterSubscribers = pgTable("newsletter_subscribers", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  source: text("source").notNull().default("landing"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+})
+
 export const subscriptions = pgTable("subscriptions", {
   id: text("id").primaryKey(),
   userId: text("userId").notNull().unique(),
