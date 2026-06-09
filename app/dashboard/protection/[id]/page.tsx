@@ -148,7 +148,7 @@ export default async function ProtectedAppPage({
         </div>
       </div>
 
-      {/* Compliance posture */}
+      {/* Compliance posture — readiness across regulatory frameworks */}
       <div className="mt-10">
         <h2 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
           Compliance posture
