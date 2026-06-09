@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { PLAN_LIST, type PlanId } from "@/lib/plans"
-import { startCheckout, cancelSubscription } from "@/app/actions/stripe"
+import { selectPlan } from "@/app/actions/stripe"
 import { Button } from "@/components/ui/button"
 import { Check, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -16,32 +16,17 @@ export function PlanGrid({ currentPlan }: { currentPlan: PlanId }) {
 
   const handleSelect = async (planId: PlanId) => {
     setError(null)
-    if (planId === "free") {
-      setLoadingId(planId)
-      startTransition(async () => {
-        await cancelSubscription()
-        router.refresh()
-        setLoadingId(null)
-      })
-      return
-    }
-
     setLoadingId(planId)
-    try {
-      const url = await startCheckout(planId)
-      if (url) {
-        // Hosted checkout: break out of the preview iframe if needed.
-        if (window.self !== window.top) {
-          window.open(url, "_blank")
-          setLoadingId(null)
-        } else {
-          window.location.href = url
-        }
+    startTransition(async () => {
+      try {
+        await selectPlan(planId)
+        router.refresh()
+      } catch {
+        setError("Could not switch plans. Please try again.")
+      } finally {
+        setLoadingId(null)
       }
-    } catch {
-      setError("Could not start checkout. Please try again.")
-      setLoadingId(null)
-    }
+    })
   }
 
   return (
@@ -107,10 +92,8 @@ export function PlanGrid({ currentPlan }: { currentPlan: PlanId }) {
                   </>
                 ) : isCurrent ? (
                   "Current plan"
-                ) : plan.id === "free" ? (
-                  "Downgrade to Free"
                 ) : (
-                  `Upgrade to ${plan.name}`
+                  `Switch to ${plan.name}`
                 )}
               </Button>
             </div>
