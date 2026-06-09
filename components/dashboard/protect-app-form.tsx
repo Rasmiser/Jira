@@ -49,13 +49,20 @@ export function ProtectAppForm({ scans }: { scans: ScanOption[] }) {
 
   return (
     <form action={protectApp} className="flex flex-col gap-8">
-      {/* Controlled state submitted via hidden inputs */}
-      {source === "scan" && (
-        <input type="hidden" name="scanId" value={selectedScan} />
-      )}
-      {source === "manual" && (
-        <input type="hidden" name="platform" value={manualPlatform} />
-      )}
+      {/* Controlled state submitted via hidden inputs.
+          These are always rendered (only their values change) to keep the
+          server and client markup structurally identical during hydration. */}
+      <input type="hidden" name="source" value={source} />
+      <input
+        type="hidden"
+        name="scanId"
+        value={source === "scan" ? selectedScan : ""}
+      />
+      <input
+        type="hidden"
+        name="platform"
+        value={source === "manual" ? manualPlatform : ""}
+      />
       {/* Source selector */}
       {scans.length > 0 && (
         <div>
