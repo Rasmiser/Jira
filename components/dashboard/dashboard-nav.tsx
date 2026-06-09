@@ -11,12 +11,14 @@ import {
   ShieldHalf,
   Radar,
   KanbanSquare,
+  FlaskConical,
 } from "lucide-react"
 import { SignOutButton } from "./sign-out-button"
 
 const NAV = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/dashboard/scan/new", label: "New scan", icon: ScanLine },
+  { href: "/dashboard/testing", label: "Test suites", icon: FlaskConical },
   { href: "/dashboard/board", label: "Kanban board", icon: KanbanSquare },
   { href: "/dashboard/protection", label: "Protection", icon: ShieldHalf },
   { href: "/dashboard/threats", label: "Live threats", icon: Radar },
