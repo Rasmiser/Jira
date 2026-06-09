@@ -6,6 +6,7 @@ import { Features } from "@/components/marketing/features"
 import { HowItWorks } from "@/components/marketing/how-it-works"
 import { Pricing } from "@/components/marketing/pricing"
 import { Testimonials } from "@/components/marketing/testimonials"
+import { BlogSection } from "@/components/marketing/blog-section"
 import { FAQ } from "@/components/marketing/faq"
 import { CtaSection } from "@/components/marketing/cta-section"
 import { SiteFooter } from "@/components/marketing/site-footer"
@@ -23,6 +24,7 @@ export default function Home() {
       <HowItWorks />
       <Pricing ctaHref={ctaHref} />
       <Testimonials />
+      <BlogSection />
       <FAQ />
       <CtaSection ctaHref={ctaHref} />
       <SiteFooter />
