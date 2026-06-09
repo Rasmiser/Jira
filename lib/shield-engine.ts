@@ -130,6 +130,80 @@ export function getShield(id: string): ShieldDef | undefined {
 }
 
 // ---------------------------------------------------------------------------
+// Compliance posture
+//
+// Maps enabled shields onto common regulatory / security frameworks. Each
+// framework lists the shield ids whose controls it depends on; readiness is the
+// share of those controls that are currently enabled on the app.
+// ---------------------------------------------------------------------------
+
+export interface ComplianceFramework {
+  id: string
+  name: string
+  full: string
+  description: string
+  requires: string[]
+}
+
+export const COMPLIANCE_FRAMEWORKS: ComplianceFramework[] = [
+  {
+    id: "masvs",
+    name: "OWASP MASVS",
+    full: "Mobile Application Security Verification Standard",
+    description: "Resilience controls (MASVS-RESILIENCE) for mobile apps.",
+    requires: [
+      "anti_tampering",
+      "anti_debugging",
+      "root_jailbreak",
+      "anti_hooking",
+      "emulator_detection",
+      "code_obfuscation",
+    ],
+  },
+  {
+    id: "pci",
+    name: "PCI DSS",
+    full: "Payment Card Industry Data Security Standard",
+    description: "Protects stored and transmitted cardholder data.",
+    requires: ["tls_pinning", "anti_tampering", "root_jailbreak", "screen_protection"],
+  },
+  {
+    id: "gdpr",
+    name: "GDPR",
+    full: "General Data Protection Regulation",
+    description: "Safeguards processing of EU personal data.",
+    requires: ["tls_pinning", "screen_protection", "anti_tampering"],
+  },
+  {
+    id: "hipaa",
+    name: "HIPAA",
+    full: "Health Insurance Portability and Accountability Act",
+    description: "Protects electronic protected health information (ePHI).",
+    requires: ["tls_pinning", "screen_protection", "root_jailbreak", "anti_debugging"],
+  },
+]
+
+export interface ComplianceResult {
+  framework: ComplianceFramework
+  readiness: number // 0-100
+  met: string[]
+  missing: string[]
+  status: "ready" | "partial" | "gap"
+}
+
+export function evaluateCompliance(enabledShields: string[]): ComplianceResult[] {
+  const enabled = new Set(enabledShields)
+  return COMPLIANCE_FRAMEWORKS.map((framework) => {
+    const met = framework.requires.filter((id) => enabled.has(id))
+    const missing = framework.requires.filter((id) => !enabled.has(id))
+    const readiness = Math.round((met.length / framework.requires.length) * 100)
+    const status: ComplianceResult["status"] =
+      readiness >= 100 ? "ready" : readiness >= 50 ? "partial" : "gap"
+    return { framework, readiness, met, missing, status }
+  })
+}
+
+// ---------------------------------------------------------------------------
 // Threat metadata
 // ---------------------------------------------------------------------------
 

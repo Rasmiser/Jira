@@ -1,7 +1,7 @@
 "use client"
 
-import type React from "react"
 import { useState } from "react"
+import { useFormStatus } from "react-dom"
 import { protectApp } from "@/app/actions/protection"
 import { ShieldPicker } from "./shield-picker"
 import { Button } from "@/components/ui/button"
@@ -19,6 +19,25 @@ interface ScanOption {
   versionName: string | null
 }
 
+function SubmitButton() {
+  const { pending } = useFormStatus()
+  return (
+    <Button type="submit" disabled={pending}>
+      {pending ? (
+        <>
+          <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+          Applying protection...
+        </>
+      ) : (
+        <>
+          <PencilLine className="h-4 w-4" aria-hidden="true" />
+          Apply protection
+        </>
+      )}
+    </Button>
+  )
+}
+
 export function ProtectAppForm({ scans }: { scans: ScanOption[] }) {
   const [source, setSource] = useState<"scan" | "manual">(
     scans.length > 0 ? "scan" : "manual",
@@ -27,30 +46,16 @@ export function ProtectAppForm({ scans }: { scans: ScanOption[] }) {
   const [manualPlatform, setManualPlatform] = useState<"android" | "ios">(
     "android",
   )
-  const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setSubmitting(true)
-    setError(null)
-    const fd = new FormData(e.currentTarget)
-    if (source === "scan") {
-      fd.set("scanId", selectedScan)
-    } else {
-      fd.delete("scanId")
-      fd.set("platform", manualPlatform)
-    }
-    const res = await protectApp(fd)
-    if (res?.error) {
-      setError("Please provide an app name to continue.")
-      setSubmitting(false)
-    }
-    // success path redirects
-  }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+    <form action={protectApp} className="flex flex-col gap-8">
+      {/* Controlled state submitted via hidden inputs */}
+      {source === "scan" && (
+        <input type="hidden" name="scanId" value={selectedScan} />
+      )}
+      {source === "manual" && (
+        <input type="hidden" name="platform" value={manualPlatform} />
+      )}
       {/* Source selector */}
       {scans.length > 0 && (
         <div>
@@ -183,26 +188,8 @@ export function ProtectAppForm({ scans }: { scans: ScanOption[] }) {
       {/* Shield configuration */}
       <ShieldPicker />
 
-      {error && (
-        <p className="text-sm text-destructive" role="alert">
-          {error}
-        </p>
-      )}
-
       <div className="flex items-center gap-3">
-        <Button type="submit" disabled={submitting}>
-          {submitting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-              Applying protection...
-            </>
-          ) : (
-            <>
-              <PencilLine className="h-4 w-4" aria-hidden="true" />
-              Apply protection
-            </>
-          )}
-        </Button>
+        <SubmitButton />
         <Button asChild variant="ghost" type="button">
           <Link href="/dashboard/protection">Cancel</Link>
         </Button>

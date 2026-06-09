@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { getProtectedApp, getThreatEvents } from "@/app/actions/protection"
-import { SHIELDS, THREAT_META, type ThreatType } from "@/lib/shield-engine"
+import { SHIELDS, THREAT_META, evaluateCompliance, type ThreatType } from "@/lib/shield-engine"
 import { RiskBadge, StatusBadge, ActionBadge } from "@/components/dashboard/status-badges"
 import { SimulateButton } from "@/components/dashboard/simulate-button"
 import { AppControls } from "@/components/dashboard/app-controls"
@@ -45,6 +45,7 @@ export default async function ProtectedAppPage({
   const shields = Array.isArray(app.shields) ? (app.shields as string[]) : []
   const enabledShields = SHIELDS.filter((s) => shields.includes(s.id))
   const disabledShields = SHIELDS.filter((s) => !shields.includes(s.id))
+  const compliance = evaluateCompliance(shields)
 
   return (
     <div className="px-6 py-8 md:px-10">
@@ -142,6 +143,61 @@ export default async function ProtectedAppPage({
                   Not enabled
                 </p>
               </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Compliance posture */}
+      <div className="mt-10">
+        <h2 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
+          Compliance posture
+        </h2>
+        <div className="mt-4 grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-2">
+          {compliance.map((c) => (
+            <div key={c.framework.id} className="bg-card px-5 py-5">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-medium text-foreground">
+                    {c.framework.name}
+                  </p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {c.framework.description}
+                  </p>
+                </div>
+                <span
+                  className={cn(
+                    "shrink-0 font-display text-2xl tracking-tight",
+                    c.status === "ready"
+                      ? "text-emerald-400"
+                      : c.status === "partial"
+                        ? "text-amber-400"
+                        : "text-destructive",
+                  )}
+                >
+                  {c.readiness}%
+                </span>
+              </div>
+              <div className="mt-3 h-1.5 w-full overflow-hidden bg-muted">
+                <div
+                  className={cn(
+                    "h-full",
+                    c.status === "ready"
+                      ? "bg-emerald-500"
+                      : c.status === "partial"
+                        ? "bg-amber-500"
+                        : "bg-destructive",
+                  )}
+                  style={{ width: `${c.readiness}%` }}
+                />
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {c.met.length}/{c.framework.requires.length} controls in place
+                {c.missing.length > 0 &&
+                  ` · ${c.missing
+                    .map((id) => SHIELDS.find((s) => s.id === id)?.name ?? id)
+                    .join(", ")} missing`}
+              </p>
             </div>
           ))}
         </div>
