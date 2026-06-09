@@ -8,8 +8,8 @@ import { useSession } from "@/lib/auth-client";
 
 const navLinks = [
   { name: "Capabilities",  href: "#features"      },
+  { name: "Protection",    href: "#protection"    },
   { name: "Process",       href: "#how-it-works"  },
-  { name: "Infra",         href: "#infra"          },
   { name: "Integrations",  href: "#integrations"  },
   { name: "Security",      href: "#security"      },
 ];
