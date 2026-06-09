@@ -189,7 +189,7 @@ export function PricingSection() {
           <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
             <span className="flex items-center gap-2">
               <Check className="w-4 h-4 text-[#eca8d6]" />
-              Encrypted execution
+              Isolated scan sandbox
             </span>
             <span className="flex items-center gap-2">
               <Check className="w-4 h-4 text-[#eca8d6]" />
@@ -197,7 +197,7 @@ export function PricingSection() {
             </span>
             <span className="flex items-center gap-2">
               <Check className="w-4 h-4 text-[#eca8d6]" />
-              Multi-model routing
+              OWASP MASVS aligned
             </span>
           </div>
           <a href="#features" className="text-sm underline underline-offset-4 hover:text-foreground transition-colors">

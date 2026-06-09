@@ -3,10 +3,10 @@
 import { useEffect, useState, useRef } from "react";
 
 const regions = [
-  { name: "Android (APK/AAB)", nodes: 12, status: "supported" },
-  { name: "iOS (IPA)", nodes: 8, status: "supported" },
-  { name: "Source code", nodes: 6, status: "supported" },
-  { name: "App bundles", nodes: 3, status: "supported" },
+  { name: "Android (APK/AAB)", nodes: "Static + dynamic", status: "supported" },
+  { name: "iOS (IPA)", nodes: "Static + dynamic", status: "supported" },
+  { name: "Source code", nodes: "Static analysis", status: "supported" },
+  { name: "App bundles", nodes: "Static analysis", status: "supported" },
 ];
 
 export function InfrastructureSection() {
@@ -144,11 +144,11 @@ export function InfrastructureSection() {
             
             <div className="relative z-10">
               <div className="flex items-baseline gap-2 mb-4">
-                <span className="text-8xl lg:text-[10rem] font-display leading-none">29</span>
-                <span className="text-2xl text-muted-foreground">regions</span>
+                <span className="text-8xl lg:text-[10rem] font-display leading-none">300</span>
+                <span className="text-2xl text-muted-foreground">+ checks</span>
               </div>
               <p className="text-muted-foreground max-w-md">
-                Compute nodes distributed globally for maximum redundancy and minimum latency.
+                Every scan runs hundreds of rules across code, configuration, and runtime, each mapped to an OWASP MASVS requirement.
               </p>
             </div>
           </div>
@@ -158,15 +158,15 @@ export function InfrastructureSection() {
             <div className={`p-8 border border-foreground/10 bg-foreground/[0.02] transition-all duration-700 delay-100 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}>
-              <span className="text-5xl lg:text-6xl font-display">99.99%</span>
-              <span className="block text-sm text-muted-foreground mt-2">Uptime SLA</span>
+              <span className="text-5xl lg:text-6xl font-display">8</span>
+              <span className="block text-sm text-muted-foreground mt-2">MASVS categories covered</span>
             </div>
             
             <div className={`p-8 border border-foreground/10 bg-foreground/[0.02] transition-all duration-700 delay-200 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}>
-              <span className="text-5xl lg:text-6xl font-display">&lt;50ms</span>
-              <span className="block text-sm text-muted-foreground mt-2">Global latency</span>
+              <span className="text-5xl lg:text-6xl font-display">L1 / L2</span>
+              <span className="block text-sm text-muted-foreground mt-2">Verification levels</span>
             </div>
           </div>
         </div>
@@ -193,7 +193,7 @@ export function InfrastructureSection() {
                 </span>
               </div>
               <span className="font-medium block mb-1">{region.name}</span>
-              <span className="text-sm text-muted-foreground">{region.nodes} nodes</span>
+              <span className="text-sm text-muted-foreground">{region.nodes}</span>
             </div>
           ))}
         </div>
