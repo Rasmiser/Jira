@@ -6,6 +6,7 @@ import { RiskBadge, StatusBadge, ActionBadge } from "@/components/dashboard/stat
 import { SimulateButton } from "@/components/dashboard/simulate-button"
 import { AppControls } from "@/components/dashboard/app-controls"
 import { ShieldPicker } from "@/components/dashboard/shield-picker"
+import { AiAnalystPanel } from "@/components/dashboard/ai-analyst-panel"
 import { updateAppShields } from "@/app/actions/protection"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -202,6 +203,9 @@ export default async function ProtectedAppPage({
           ))}
         </div>
       </div>
+
+      {/* AI security analyst — interprets telemetry into a prioritized briefing */}
+      <AiAnalystPanel appId={app.id} />
 
       {/* Recent threats for this app */}
       <div className="mt-10">

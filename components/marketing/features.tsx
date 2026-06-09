@@ -1,4 +1,4 @@
-import { ScanSearch, FileText, GitBranch, ShieldCheck, BarChart3, Lock } from "lucide-react"
+import { ScanSearch, FileText, GitBranch, ShieldCheck, BarChart3, Sparkles } from "lucide-react"
 
 const features = [
   {
@@ -26,10 +26,10 @@ const features = [
       "Trigger scans on every build from GitHub, GitLab, or Bitbucket and automatically fail releases on critical findings.",
   },
   {
-    icon: Lock,
-    title: "Runtime protection",
+    icon: Sparkles,
+    title: "AI-powered runtime protection",
     description:
-      "Add anti-tampering, root/jailbreak detection, and TLS pinning to shield apps after they ship, no code changes required.",
+      "Self-defending shields for Android, iOS, and cross-platform apps with zero code changes. An AI analyst reads live telemetry and adapts your defenses on the fly.",
   },
   {
     icon: BarChart3,
