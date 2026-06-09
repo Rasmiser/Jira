@@ -3,12 +3,21 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { LayoutDashboard, ScanLine, CreditCard, ShieldCheck } from "lucide-react"
+import {
+  LayoutDashboard,
+  ScanLine,
+  CreditCard,
+  ShieldCheck,
+  ShieldHalf,
+  Radar,
+} from "lucide-react"
 import { SignOutButton } from "./sign-out-button"
 
 const NAV = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/dashboard/scan/new", label: "New scan", icon: ScanLine },
+  { href: "/dashboard/protection", label: "Protection", icon: ShieldHalf },
+  { href: "/dashboard/threats", label: "Live threats", icon: Radar },
   { href: "/dashboard/billing", label: "Billing", icon: CreditCard },
 ]
 

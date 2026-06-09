@@ -220,6 +220,46 @@ export function FeaturesSection() {
               <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent" />
             </div>
           </div>
+
+          {/* Service cards with graphics for capabilities 02-04 */}
+          {[
+            { feature: features[1], image: "/images/ai-report.png" },
+            { feature: features[2], image: "/images/cicd-pipeline.png" },
+            { feature: features[3], image: "/images/sandbox.png" },
+          ].map(({ feature, image }, i) => (
+            <div
+              key={feature.number}
+              className={`lg:col-span-4 relative bg-black border border-foreground/10 overflow-hidden group flex flex-col transition-all duration-700 ${
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+              }`}
+              style={{ transitionDelay: `${(i + 1) * 120}ms` }}
+              onMouseEnter={() => setActiveFeature(i + 1)}
+            >
+              {/* Graphic */}
+              <div className="relative h-52 overflow-hidden">
+                <img
+                  src={image || "/placeholder.svg"}
+                  alt={`${feature.title} illustration`}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+              </div>
+              {/* Text */}
+              <div className="relative flex-1 p-8 flex flex-col">
+                <span className="font-mono text-sm text-muted-foreground">{feature.number}</span>
+                <h3 className="text-2xl font-display mt-3 mb-4 group-hover:translate-x-1 transition-transform duration-500">
+                  {feature.title}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed mb-8 flex-1">
+                  {feature.description}
+                </p>
+                <div className="pt-6 border-t border-foreground/10">
+                  <span className="text-4xl font-display">{feature.stats.value}</span>
+                  <span className="block text-xs text-muted-foreground font-mono mt-1">{feature.stats.label}</span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

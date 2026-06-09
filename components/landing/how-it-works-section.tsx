@@ -159,7 +159,48 @@ export function HowItWorksSection() {
         </div>
 
         {/* Code Preview - Large terminal */}
-        
+        <div className={`mt-4 border border-white/15 bg-black overflow-hidden transition-all duration-1000 delay-300 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}>
+          {/* Terminal title bar */}
+          <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
+            <div className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded-full bg-white/15" aria-hidden="true" />
+              <span className="h-3 w-3 rounded-full bg-white/15" aria-hidden="true" />
+              <span className="h-3 w-3 rounded-full bg-white/15" aria-hidden="true" />
+            </div>
+            <span className="text-xs font-mono text-white/40">
+              rasmiser · step {steps[activeStep].number}
+            </span>
+            <div className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
+              <span className="text-xs font-mono text-white/40">live</span>
+            </div>
+          </div>
+          {/* Code body */}
+          <div className="grid lg:grid-cols-[1fr_auto]">
+            <pre
+              key={activeStep}
+              className="p-6 lg:p-8 text-sm lg:text-base font-mono text-[#eca8d6]/90 leading-relaxed overflow-x-auto whitespace-pre animate-fadeIn"
+            >
+              {steps[activeStep].code}
+            </pre>
+            {/* Step legend on the right */}
+            <div className="hidden lg:flex flex-col justify-center gap-3 border-l border-white/10 px-8 py-8 min-w-[220px]">
+              {steps.map((s, i) => (
+                <div
+                  key={s.number}
+                  className={`flex items-center gap-3 transition-opacity duration-300 ${
+                    activeStep === i ? "opacity-100" : "opacity-30"
+                  }`}
+                >
+                  <span className={`h-2 w-2 rounded-full ${activeStep === i ? "bg-[#eca8d6]" : "bg-white/30"}`} aria-hidden="true" />
+                  <span className="text-sm font-mono text-white/70">{s.number} {s.title}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       <style jsx>{`
@@ -169,6 +210,13 @@ export function HowItWorksSection() {
         }
         .animate-progress {
           animation: progress 6s linear forwards;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.4s ease-out;
         }
       `}</style>
     </section>

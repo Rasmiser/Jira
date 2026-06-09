@@ -3,7 +3,6 @@
 import type React from "react"
 import { useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,7 +10,6 @@ import { Label } from "@/components/ui/label"
 import { ShieldCheck } from "lucide-react"
 
 export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
-  const router = useRouter()
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -25,19 +23,30 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
     setError(null)
     setLoading(true)
 
-    const { error } = isSignUp
-      ? await authClient.signUp.email({ email, password, name })
-      : await authClient.signIn.email({ email, password })
+    try {
+      const { error } = isSignUp
+        ? await authClient.signUp.email({ email, password, name })
+        : await authClient.signIn.email({ email, password })
 
-    setLoading(false)
+      if (error) {
+        setLoading(false)
+        setError(
+          error.message ??
+            (isSignUp
+              ? "Could not create your account. This email may already be in use."
+              : "Invalid email or password."),
+        )
+        return
+      }
 
-    if (error) {
-      setError(error.message ?? "Something went wrong")
-      return
+      // Use a full navigation so the server reliably reads the freshly-set
+      // session cookie (a soft router.push can race the cookie in the preview iframe).
+      window.location.href = "/dashboard"
+    } catch (err) {
+      setLoading(false)
+      setError("Something went wrong. Please try again.")
+      console.log("[v0] auth error:", err)
     }
-
-    router.push("/dashboard")
-    router.refresh()
   }
 
   return (

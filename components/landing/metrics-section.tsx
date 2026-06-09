@@ -4,25 +4,25 @@ import { useEffect, useState, useRef } from "react";
 
 const metrics = [
   { 
-    value: 12847392, 
+    value: 128439, 
     suffix: "", 
     prefix: "",
-    label: "Tasks completed today",
-    sublabel: "by 23,847 active agents",
+    label: "Builds scanned this month",
+    sublabel: "across iOS & Android",
   },
   { 
     value: 99, 
     suffix: ".99%", 
     prefix: "",
-    label: "Availability",
-    sublabel: "across all regions",
+    label: "Scan success rate",
+    sublabel: "completed without errors",
   },
   { 
-    value: 340, 
-    suffix: "ms", 
+    value: 5, 
+    suffix: "min", 
     prefix: "<",
-    label: "Average execution",
-    sublabel: "p99 latency",
+    label: "Average scan time",
+    sublabel: "upload to full report",
   },
 ];
 
@@ -261,7 +261,7 @@ export function MetricsSection() {
             }`}>
               Real-time
               <br />
-              <span className="text-muted-foreground">agent metrics.</span>
+              <span className="text-muted-foreground">scan metrics.</span>
             </h2>
           </div>
         </div>
@@ -328,11 +328,11 @@ export function MetricsSection() {
         <div className={`mt-16 pt-8 border-t border-foreground/10 flex flex-wrap items-center gap-x-12 gap-y-4 text-sm font-mono text-muted-foreground transition-all duration-1000 delay-500 ${
           isVisible ? "opacity-100" : "opacity-0"
         }`}>
-          <span>OpenAI GPT-4 Turbo</span>
-          <span>Anthropic Claude 3</span>
-          <span>Mistral Large</span>
-          <span>Llama 3</span>
-          <span className="text-foreground">+12 more models</span>
+          <span>Static analysis (MobSF)</span>
+          <span>Dynamic analysis</span>
+          <span>OWASP MASVS</span>
+          <span>CI/CD gating</span>
+          <span className="text-foreground">+300 security checks</span>
         </div>
       </div>
     </section>

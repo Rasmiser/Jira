@@ -5,32 +5,32 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const testimonials = [
   {
-    quote: "Our agents handle 80% of our customer support tickets autonomously. The ROI was immediate.",
+    quote: "We catch insecure storage and hardcoded secrets before they ever reach the store. RASMISER is now a required gate in every release.",
     author: "Sarah Chen",
     role: "CTO",
     company: "Meridian Labs",
-    metric: { value: "80%", label: "Ticket resolution" },
+    metric: { value: "100%", label: "Releases scanned" },
   },
   {
-    quote: "We deployed research agents that work 24/7. They surface insights we'd never find manually.",
+    quote: "The AI-written reports turned a week of manual pentesting into a five-minute scan our developers can actually act on.",
     author: "Marcus Webb",
-    role: "Head of Research",
+    role: "Head of Mobile",
     company: "Flux Systems",
-    metric: { value: "10x", label: "Research output" },
+    metric: { value: "<5min", label: "Average scan time" },
   },
   {
-    quote: "The multi-agent orchestration is incredible. Complex workflows that took weeks now run in hours.",
+    quote: "Wiring RASMISER into our CI pipeline meant critical findings now fail the build automatically. No more surprises in production.",
     author: "Elena Rodriguez",
     role: "VP Engineering",
     company: "Beacon AI",
-    metric: { value: "40x", label: "Faster workflows" },
+    metric: { value: "0", label: "Critical bugs shipped" },
   },
   {
-    quote: "Security was our biggest concern. The sandboxing and audit trails gave us full confidence.",
+    quote: "Mapping every finding to OWASP MASVS made our compliance audits painless. The auditors had everything they needed.",
     author: "James Liu",
     role: "CISO",
     company: "Prism Analytics",
-    metric: { value: "0", label: "Security incidents" },
+    metric: { value: "MASVS", label: "Fully aligned" },
   },
 ];
 

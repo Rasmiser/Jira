@@ -1,17 +1,25 @@
 import Link from "next/link"
 import { getScans } from "@/app/actions/scans"
+import { getProtectedApps, getThreatStats } from "@/app/actions/protection"
 import { getUserId, getUsage } from "@/lib/subscription"
 import { Button } from "@/components/ui/button"
 import { SeverityBadge, gradeColor } from "@/components/dashboard/severity-badge"
+import { RiskBadge } from "@/components/dashboard/status-badges"
 import { cn } from "@/lib/utils"
 import {
   ScanLine,
   ShieldAlert,
   ShieldCheck,
+  ShieldHalf,
+  Radar,
   ArrowRight,
   Smartphone,
   Apple,
 } from "lucide-react"
+
+function formatNumber(n: number) {
+  return new Intl.NumberFormat("en-US").format(n)
+}
 
 function formatDate(d: Date | string) {
   return new Date(d).toLocaleDateString("en-US", {
@@ -23,13 +31,19 @@ function formatDate(d: Date | string) {
 
 export default async function DashboardPage() {
   const userId = await getUserId()
-  const [scans, usage] = await Promise.all([getScans(), getUsage(userId)])
+  const [scans, usage, protectedApps, threatStats] = await Promise.all([
+    getScans(),
+    getUsage(userId),
+    getProtectedApps(),
+    getThreatStats(),
+  ])
 
   const totalFindings = scans.reduce(
     (sum, s) => sum + s.criticalCount + s.highCount + s.mediumCount + s.lowCount,
     0,
   )
   const criticalTotal = scans.reduce((sum, s) => sum + s.criticalCount, 0)
+  const totalBlocked = protectedApps.reduce((s, a) => s + a.attacksBlocked, 0)
 
   return (
     <div className="px-6 py-8 md:px-10">
@@ -90,6 +104,99 @@ export default async function DashboardPage() {
           </Button>
         </div>
       )}
+
+      {/* Runtime protection */}
+      <div className="mt-10">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
+            Runtime protection
+          </h2>
+          <Link
+            href="/dashboard/protection"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Manage
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
+        </div>
+
+        <div className="mt-4 grid gap-4 lg:grid-cols-3">
+          <Link
+            href="/dashboard/protection"
+            className="border border-border bg-card px-5 py-5 transition-colors hover:bg-accent"
+          >
+            <ShieldHalf className="h-5 w-5 text-foreground" aria-hidden="true" />
+            <p className="mt-3 font-display text-3xl tracking-tight text-foreground">
+              {protectedApps.length}
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">Protected apps</p>
+          </Link>
+          <Link
+            href="/dashboard/threats"
+            className="border border-border bg-card px-5 py-5 transition-colors hover:bg-accent"
+          >
+            <ShieldCheck
+              className="h-5 w-5 text-emerald-400"
+              aria-hidden="true"
+            />
+            <p className="mt-3 font-display text-3xl tracking-tight text-foreground">
+              {formatNumber(totalBlocked)}
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">Attacks blocked</p>
+          </Link>
+          <Link
+            href="/dashboard/threats"
+            className="border border-border bg-card px-5 py-5 transition-colors hover:bg-accent"
+          >
+            <Radar className="h-5 w-5 text-foreground" aria-hidden="true" />
+            <p className="mt-3 font-display text-3xl tracking-tight text-foreground">
+              {formatNumber(threatStats.last24h)}
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Threat events (24h)
+            </p>
+          </Link>
+        </div>
+
+        {protectedApps.length === 0 ? (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border border-dashed border-border px-5 py-4">
+            <p className="text-sm text-muted-foreground">
+              Go beyond scanning — apply no-code runtime protection to block live
+              attacks on shipped apps.
+            </p>
+            <Button asChild size="sm" variant="secondary">
+              <Link href="/dashboard/protection/new">Protect an app</Link>
+            </Button>
+          </div>
+        ) : (
+          <div className="mt-4 divide-y divide-border border border-border">
+            {protectedApps.slice(0, 3).map((app) => (
+              <Link
+                key={app.id}
+                href={`/dashboard/protection/${app.id}`}
+                className="flex items-center gap-4 px-5 py-3 transition-colors hover:bg-accent"
+              >
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-border bg-muted text-muted-foreground">
+                  {app.platform === "ios" ? (
+                    <Apple className="h-4 w-4" aria-hidden="true" />
+                  ) : (
+                    <Smartphone className="h-4 w-4" aria-hidden="true" />
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-medium text-foreground">
+                    {app.appName}
+                  </p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {formatNumber(app.attacksBlocked)} blocked
+                  </p>
+                </div>
+                <RiskBadge risk={app.riskLevel} />
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Recent scans */}
       <div className="mt-10">

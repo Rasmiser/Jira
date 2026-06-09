@@ -1,33 +1,33 @@
-import { Navigation } from "@/components/landing/navigation";
-import { HeroSection } from "@/components/landing/hero-section";
-import { FeaturesSection } from "@/components/landing/features-section";
-import { HowItWorksSection } from "@/components/landing/how-it-works-section";
-import { InfrastructureSection } from "@/components/landing/infrastructure-section";
-import { MetricsSection } from "@/components/landing/metrics-section";
-import { IntegrationsSection } from "@/components/landing/integrations-section";
-import { SecuritySection } from "@/components/landing/security-section";
-import { DevelopersSection } from "@/components/landing/developers-section";
-import { TestimonialsSection } from "@/components/landing/testimonials-section";
-import { PricingSection } from "@/components/landing/pricing-section";
-import { CtaSection } from "@/components/landing/cta-section";
-import { FooterSection } from "@/components/landing/footer-section";
+"use client"
+
+import { SiteHeader } from "@/components/marketing/site-header"
+import { Hero } from "@/components/marketing/hero"
+import { Features } from "@/components/marketing/features"
+import { HowItWorks } from "@/components/marketing/how-it-works"
+import { Pricing } from "@/components/marketing/pricing"
+import { Testimonials } from "@/components/marketing/testimonials"
+import { BlogSection } from "@/components/marketing/blog-section"
+import { FAQ } from "@/components/marketing/faq"
+import { CtaSection } from "@/components/marketing/cta-section"
+import { SiteFooter } from "@/components/marketing/site-footer"
+import { useSession } from "@/lib/auth-client"
 
 export default function Home() {
+  const { data: session } = useSession()
+  const ctaHref = session?.user ? "/dashboard" : "/sign-up"
+
   return (
-    <main className="relative min-h-screen overflow-x-hidden">
-      <Navigation />
-      <HeroSection />
-      <FeaturesSection />
-      <HowItWorksSection />
-      <InfrastructureSection />
-      <MetricsSection />
-      <IntegrationsSection />
-      <SecuritySection />
-      <DevelopersSection />
-      <TestimonialsSection />
-      <PricingSection />
-      <CtaSection />
-      <FooterSection />
+    <main className="min-h-screen bg-white">
+      <SiteHeader />
+      <Hero ctaHref={ctaHref} />
+      <Features />
+      <HowItWorks />
+      <Pricing ctaHref={ctaHref} />
+      <Testimonials />
+      <BlogSection />
+      <FAQ />
+      <CtaSection ctaHref={ctaHref} />
+      <SiteFooter />
     </main>
-  );
+  )
 }

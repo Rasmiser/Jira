@@ -4,6 +4,7 @@ import {
   timestamp,
   boolean,
   integer,
+  jsonb,
 } from "drizzle-orm/pg-core"
 
 // ---------------------------------------------------------------------------
@@ -93,6 +94,43 @@ export const findings = pgTable("findings", {
   description: text("description").notNull(),
   remediation: text("remediation").notNull(),
   reference: text("reference"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+})
+
+// Apps that have runtime protection applied (no-code shielding)
+export const protectedApps = pgTable("protected_apps", {
+  id: text("id").primaryKey(),
+  userId: text("userId").notNull(),
+  scanId: text("scanId"),
+  appName: text("appName").notNull(),
+  packageName: text("packageName"),
+  platform: text("platform").notNull(), // android | ios
+  versionName: text("versionName"),
+  status: text("status").notNull().default("protected"), // protected | building | paused
+  protectionLevel: text("protectionLevel").notNull().default("standard"), // standard | advanced | maximum
+  shields: jsonb("shields").notNull().default([]), // string[] of enabled shield ids
+  installCount: integer("installCount").notNull().default(0),
+  attacksBlocked: integer("attacksBlocked").notNull().default(0),
+  riskLevel: text("riskLevel").notNull().default("low"), // low | medium | high | critical
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+})
+
+// Live runtime security events captured from protected apps
+export const threatEvents = pgTable("threat_events", {
+  id: text("id").primaryKey(),
+  userId: text("userId").notNull(),
+  appId: text("appId").notNull(),
+  appName: text("appName").notNull(),
+  platform: text("platform").notNull(),
+  threatType: text("threatType").notNull(), // hooking | tampering | jailbreak | root | mitm | debugger | screen_capture | emulator
+  severity: text("severity").notNull(), // critical | high | medium | low
+  action: text("action").notNull(), // blocked | terminated | flagged | allowed
+  deviceModel: text("deviceModel"),
+  osVersion: text("osVersion"),
+  country: text("country"),
+  countryCode: text("countryCode"),
+  description: text("description"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
 })
 

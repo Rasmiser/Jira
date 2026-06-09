@@ -66,18 +66,18 @@ const logos: Record<string, React.ReactNode> = {
 };
 
 const integrations = [
-  { name: "OpenAI", category: "LLM" },
-  { name: "Anthropic", category: "LLM" },
-  { name: "Slack", category: "Comms" },
-  { name: "GitHub", category: "Code" },
-  { name: "Jira", category: "PM" },
+  { name: "GitHub", category: "CI/CD" },
+  { name: "Jira", category: "Issues" },
+  { name: "Slack", category: "Alerts" },
+  { name: "OpenAI", category: "AI reports" },
+  { name: "Anthropic", category: "AI reports" },
   { name: "AWS S3", category: "Storage" },
-  { name: "Google Drive", category: "Docs" },
-  { name: "Salesforce", category: "CRM" },
-  { name: "HubSpot", category: "Marketing" },
-  { name: "Zapier", category: "Auto" },
+  { name: "Google Drive", category: "Export" },
+  { name: "Zapier", category: "Automation" },
   { name: "Snowflake", category: "Data" },
-  { name: "Stripe", category: "Payments" },
+  { name: "Salesforce", category: "Webhook" },
+  { name: "HubSpot", category: "Webhook" },
+  { name: "Stripe", category: "Billing" },
 ];
 
 export function IntegrationsSection() {
@@ -122,7 +122,7 @@ export function IntegrationsSection() {
         <p className={`mt-8 text-xl text-muted-foreground leading-relaxed max-w-lg mx-auto transition-all duration-1000 delay-100 ${
           isVisible ? "opacity-100" : "opacity-0"
         }`}>
-          Your agents connect to 100+ tools and services. They read, write, and act autonomously across your entire stack.
+          Plug RASMISER into your pipeline and toolchain. Trigger scans on every build and route findings to where your team already works.
         </p>
       </div>
 
