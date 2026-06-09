@@ -94,6 +94,11 @@ export const findings = pgTable("findings", {
   description: text("description").notNull(),
   remediation: text("remediation").notNull(),
   reference: text("reference"),
+  // Jira sync tracking
+  jiraIssueKey: text("jiraIssueKey"),
+  jiraIssueUrl: text("jiraIssueUrl"),
+  jiraStatus: text("jiraStatus"),
+  jiraSyncedAt: timestamp("jiraSyncedAt"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
 })
 
