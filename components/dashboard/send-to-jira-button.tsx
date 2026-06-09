@@ -73,10 +73,10 @@ export function SendToJiraButton({
             </>
           ) : (
             <>
-              <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" />
+              <AlertTriangle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               {result.error === "not_configured"
-                ? "Jira is not configured"
-                : "Could not push to Jira"}
+                ? "Jira is not configured. Set JIRA_BASE_URL, JIRA_EMAIL, JIRA_API_TOKEN and JIRA_PROJECT_KEY."
+                : result.message || "Could not push to Jira"}
             </>
           )}
         </p>

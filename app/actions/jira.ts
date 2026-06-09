@@ -22,6 +22,8 @@ async function getBaseUrl() {
 export interface SyncResult {
   ok: boolean
   error?: "not_configured" | "no_findings" | "failed"
+  /** Human-readable detail surfaced to the UI when something goes wrong. */
+  message?: string
   created?: number
   skipped?: number
   slackNotified?: boolean
@@ -97,9 +99,10 @@ export async function pushScanToJira(scanId: string): Promise<SyncResult> {
     }
   } catch (err) {
     console.error("[v0] pushScanToJira failed:", err)
+    const detail = extractJiraError(err)
     // Surface partial success: some issues may have been created.
     if (createdIssues.length === 0) {
-      return { ok: false, error: "failed" }
+      return { ok: false, error: "failed", message: detail }
     }
   }
 
@@ -126,5 +129,39 @@ export async function pushScanToJira(scanId: string): Promise<SyncResult> {
     skipped: rows.length - pending.length,
     slackNotified,
   }
+}
+
+/**
+ * Pulls the most useful human-readable message out of a jira.js / Axios error
+ * so the UI can tell the user exactly what went wrong (auth, project key,
+ * issue type, permissions, etc.) instead of a generic failure.
+ */
+function extractJiraError(err: unknown): string {
+  const anyErr = err as {
+    response?: {
+      status?: number
+      data?: {
+        errorMessages?: string[]
+        errors?: Record<string, string>
+      }
+    }
+    status?: number
+    message?: string
+  }
+
+  const status = anyErr?.response?.status ?? anyErr?.status
+  const data = anyErr?.response?.data
+
+  const messages: string[] = []
+  if (data?.errorMessages?.length) messages.push(...data.errorMessages)
+  if (data?.errors) messages.push(...Object.values(data.errors))
+
+  if (messages.length) return messages.join(" ")
+
+  if (status === 401) return "Jira authentication failed — check JIRA_EMAIL and JIRA_API_TOKEN."
+  if (status === 403) return "Jira denied access — the account lacks permission to create issues in this project."
+  if (status === 404) return "Jira project not found — check JIRA_PROJECT_KEY."
+
+  return anyErr?.message || "Could not push to Jira."
 }
 
