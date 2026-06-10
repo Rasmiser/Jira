@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { SeverityBadge } from "./severity-badge"
+import { FindingFix } from "./finding-fix"
 import { ChevronDown, BookOpen, Wrench } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -14,6 +15,9 @@ export interface FindingItem {
   description: string
   remediation: string
   reference: string | null
+  aiFixSummary: string | null
+  aiFixCode: string | null
+  aiFixLanguage: string | null
 }
 
 const SEVERITY_ORDER: Record<string, number> = {
@@ -98,6 +102,14 @@ export function FindingsList({ findings }: { findings: FindingItem[] }) {
                     Reference
                   </a>
                 )}
+                <FindingFix
+                  findingId={f.id}
+                  cached={{
+                    summary: f.aiFixSummary,
+                    code: f.aiFixCode,
+                    language: f.aiFixLanguage,
+                  }}
+                />
               </div>
             )}
           </div>
