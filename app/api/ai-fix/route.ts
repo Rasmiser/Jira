@@ -59,10 +59,16 @@ export async function POST(req: Request) {
     system: FIX_SYSTEM,
     prompt: buildFixPrompt(ctx),
     output: Output.object({ schema: fixSchema }),
-    onFinish: async ({ output }) => {
-      const fix = output as
+    onFinish: async ({ text }) => {
+      // With Output.object the final text is the complete JSON object.
+      let fix:
         | { fixSummary?: string; codeFix?: string; language?: string }
         | undefined
+      try {
+        fix = JSON.parse(text)
+      } catch {
+        return
+      }
       if (!fix?.codeFix) return
       try {
         await db

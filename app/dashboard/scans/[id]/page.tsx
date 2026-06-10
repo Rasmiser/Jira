@@ -144,6 +144,11 @@ export default async function ScanReportPage({
             <FindingsList findings={findings} />
           </div>
         </div>
+
+        {/* OWASP MASVS compliance */}
+        <div className="mt-10">
+          <MasvsReportPanel scanId={scan.id} />
+        </div>
       </div>
     </div>
   )
