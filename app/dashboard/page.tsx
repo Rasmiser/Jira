@@ -15,6 +15,7 @@ import {
   ArrowRight,
   Smartphone,
   Apple,
+  GitCompareArrows,
 } from "lucide-react"
 
 function formatNumber(n: number) {
@@ -200,9 +201,20 @@ export default async function DashboardPage() {
 
       {/* Recent scans */}
       <div className="mt-10">
-        <h2 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-          Recent scans
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
+            Recent scans
+          </h2>
+          {scans.length >= 2 && (
+            <Link
+              href="/dashboard/compare"
+              className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <GitCompareArrows className="h-3.5 w-3.5" aria-hidden="true" />
+              Compare versions
+            </Link>
+          )}
+        </div>
 
         {scans.length === 0 ? (
           <div className="mt-4 flex flex-col items-center justify-center border border-dashed border-border px-6 py-16 text-center">

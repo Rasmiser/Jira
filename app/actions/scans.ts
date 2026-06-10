@@ -101,6 +101,36 @@ export async function createScan(formData: FormData) {
   redirect(`/dashboard/scans/${scanId}`)
 }
 
+/**
+ * Returns two scans (base + target) with their findings, scoped to the current
+ * user. Used by the version-comparison view. Returns null for a side that does
+ * not exist or does not belong to the user.
+ */
+export async function getComparison(baseId: string, targetId: string) {
+  const userId = await getUserId()
+
+  const [scanRows, findingRows] = await Promise.all([
+    db
+      .select()
+      .from(scans)
+      .where(eq(scans.userId, userId)),
+    db
+      .select()
+      .from(findings)
+      .where(eq(findings.userId, userId)),
+  ])
+
+  const base = scanRows.find((s) => s.id === baseId) ?? null
+  const target = scanRows.find((s) => s.id === targetId) ?? null
+
+  return {
+    base,
+    target,
+    baseFindings: findingRows.filter((f) => f.scanId === baseId),
+    targetFindings: findingRows.filter((f) => f.scanId === targetId),
+  }
+}
+
 export async function deleteScan(id: string) {
   const userId = await getUserId()
   await db.delete(findings).where(and(eq(findings.scanId, id), eq(findings.userId, userId)))

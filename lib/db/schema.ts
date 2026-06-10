@@ -94,6 +94,11 @@ export const findings = pgTable("findings", {
   description: text("description").notNull(),
   remediation: text("remediation").notNull(),
   reference: text("reference"),
+  // Cached AI fix recommendation (generated on demand)
+  aiFixSummary: text("aiFixSummary"),
+  aiFixCode: text("aiFixCode"),
+  aiFixLanguage: text("aiFixLanguage"),
+  aiFixGeneratedAt: timestamp("aiFixGeneratedAt"),
   // Jira sync tracking
   jiraIssueKey: text("jiraIssueKey"),
   jiraIssueUrl: text("jiraIssueUrl"),

@@ -2,6 +2,8 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { getScan, getFindings } from "@/app/actions/scans"
 import { RiskGauge } from "@/components/dashboard/risk-gauge"
+import { SecurityScoreCard } from "@/components/dashboard/security-score-card"
+import { MasvsReportPanel } from "@/components/dashboard/masvs-report-panel"
 import { FindingsList } from "@/components/dashboard/findings-list"
 import { DeleteScanButton } from "@/components/dashboard/delete-scan-button"
 import { SendToJiraButton } from "@/components/dashboard/send-to-jira-button"
@@ -13,6 +15,7 @@ import {
   Package,
   Tag,
   Calendar,
+  Download,
 } from "lucide-react"
 
 function formatDate(d: Date | string) {
@@ -77,6 +80,13 @@ export default async function ScanReportPage({
             </div>
           </div>
           <div className="flex flex-col items-start gap-3 sm:items-end">
+            <a
+              href={`/api/scans/${scan.id}/pdf`}
+              className="inline-flex items-center gap-2 border border-border bg-secondary px-3 py-1.5 text-sm font-medium text-secondary-foreground transition-colors hover:bg-accent"
+            >
+              <Download className="h-4 w-4" aria-hidden="true" />
+              Download PDF
+            </a>
             <SendToJiraButton
               scanId={scan.id}
               syncedCount={syncedCount}
@@ -85,6 +95,17 @@ export default async function ScanReportPage({
             <DeleteScanButton scanId={scan.id} />
           </div>
         </div>
+
+        {/* Executive security score */}
+        <SecurityScoreCard
+          riskScore={scan.riskScore}
+          counts={{
+            critical: scan.criticalCount,
+            high: scan.highCount,
+            medium: scan.mediumCount,
+            low: scan.lowCount,
+          }}
+        />
 
         {/* Severity breakdown */}
         <div className="mt-px grid grid-cols-2 gap-px overflow-hidden border border-border bg-border sm:grid-cols-4">
@@ -122,6 +143,11 @@ export default async function ScanReportPage({
           <div className="mt-4">
             <FindingsList findings={findings} />
           </div>
+        </div>
+
+        {/* OWASP MASVS compliance */}
+        <div className="mt-10">
+          <MasvsReportPanel scanId={scan.id} />
         </div>
       </div>
     </div>
