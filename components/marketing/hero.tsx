@@ -15,12 +15,13 @@ export function Hero({ ctaHref }: { ctaHref: string }) {
           </span>
 
           <h1 className="mt-6 text-balance text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl md:text-6xl">
-            Ship mobile apps without security surprises
+            Mobile app security, from first scan to runtime
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-slate-600">
-            Upload your Android or iOS build and get a full vulnerability report in minutes. RASMISER
-            scans every release, explains each finding in plain English, and tells your team exactly how to fix it.
+            RASMISER is the security platform for mobile teams. Upload an Android or iOS build to get a full OWASP MASVS
+            vulnerability report in minutes, then shield every release at runtime — anti-tampering, TLS pinning, and
+            threat detection with zero code changes.
           </p>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
