@@ -2,14 +2,16 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { track } from "@vercel/analytics"
 import { Shield, Menu, X } from "lucide-react"
 import { useSession } from "@/lib/auth-client"
 
 const navLinks = [
   { name: "Features", href: "/#features" },
-  { name: "Services", href: "/#services" },
   { name: "How it works", href: "/#how-it-works" },
+  { name: "Live demo", href: "/#live-demo" },
   { name: "Pricing", href: "/pricing" },
+  { name: "Compare", href: "/compare" },
   { name: "Blog", href: "/blog" },
 ]
 
@@ -70,6 +72,7 @@ export function SiteHeader() {
           )}
           <Link
             href={ctaHref}
+            onClick={() => track("header_cta_clicked", { authed: isAuthed, location: "desktop" })}
             className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
           >
             {ctaLabel}
@@ -114,6 +117,7 @@ export function SiteHeader() {
               )}
               <Link
                 href={ctaHref}
+                onClick={() => track("header_cta_clicked", { authed: isAuthed, location: "mobile" })}
                 className="rounded-lg bg-blue-600 px-4 py-2 text-center text-sm font-semibold text-white"
               >
                 {ctaLabel}

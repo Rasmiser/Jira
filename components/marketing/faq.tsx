@@ -23,7 +23,7 @@ const faqs = [
   },
   {
     q: "Is there a free plan?",
-    a: "Yes. The Free plan includes three scans per month with static analysis and OWASP MASVS findings, with no credit card required.",
+    a: "Yes. The Free plan includes unlimited Android and iOS scans, full OWASP MASVS reports, and runtime protection — with no credit card required. Paid Team ($30/mo) and Enterprise ($60/mo) plans add collaboration, integrations, and enterprise governance.",
   },
 ]
 

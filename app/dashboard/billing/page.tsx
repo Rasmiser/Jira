@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import { getSession, getOrCreateSubscription, getUsage } from "@/lib/subscription"
-import { getPlan, type PlanId } from "@/lib/plans"
+import { getPlan, PLANS, type PlanId } from "@/lib/plans"
 import { confirmCheckout } from "@/app/actions/stripe"
 import { PlanGrid } from "@/components/dashboard/plan-grid"
 import { CheckCircle2, XCircle } from "lucide-react"
@@ -8,7 +8,7 @@ import { CheckCircle2, XCircle } from "lucide-react"
 export default async function BillingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ session_id?: string; canceled?: string }>
+  searchParams: Promise<{ session_id?: string; canceled?: string; plan?: string }>
 }) {
   const session = await getSession()
   if (!session?.user) redirect("/sign-in")
@@ -24,6 +24,13 @@ export default async function BillingPage({
   const sub = await getOrCreateSubscription(session.user.id)
   const plan = getPlan(sub.plan)
   const usage = await getUsage(session.user.id)
+
+  // A ?plan= hint from the marketing pricing page pre-selects a paid plan for
+  // checkout, as long as it's a real paid plan the user isn't already on.
+  const intent =
+    sp.plan && sp.plan in PLANS && sp.plan !== "free" && sp.plan !== plan.id
+      ? (sp.plan as PlanId)
+      : undefined
 
   return (
     <div className="px-6 py-8 md:px-10">
@@ -75,13 +82,25 @@ export default async function BillingPage({
           </div>
         </div>
 
+        {plan.id !== "free" && sub.currentPeriodEnd && (
+          <p className="mt-3 text-sm text-muted-foreground">
+            Your {plan.name} subscription renews on{" "}
+            {new Date(sub.currentPeriodEnd).toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
+            . Switch to Free anytime to cancel.
+          </p>
+        )}
+
         <div className="mt-8">
-          <PlanGrid currentPlan={plan.id as PlanId} />
+          <PlanGrid currentPlan={plan.id as PlanId} autoCheckout={intent} />
         </div>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          All plans are free during open access — every plan includes unlimited
-          scans. Switch anytime, no payment required.
+          Paid plans are billed monthly and you can cancel anytime by switching
+          back to Free. Payments are processed securely by Stripe.
         </p>
       </div>
     </div>

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { track } from "@vercel/analytics"
 import { Shield } from "lucide-react"
 import { subscribeToNewsletter } from "@/app/actions/newsletter"
 
@@ -15,7 +16,10 @@ export function NewsletterSection() {
     startTransition(async () => {
       const res = await subscribeToNewsletter(formData)
       setResult(res)
-      if (res.ok) form.reset()
+      if (res.ok) {
+        track("newsletter_subscribed")
+        form.reset()
+      }
     })
   }
 

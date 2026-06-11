@@ -1,4 +1,4 @@
-export type PlanId = "free" | "pro" | "team"
+export type PlanId = "free" | "team" | "enterprise"
 
 export interface Plan {
   id: PlanId
@@ -11,47 +11,51 @@ export interface Plan {
 }
 
 // Source of truth for all plans. Stripe checkout creates prices inline from
-// priceInCents, so no Stripe dashboard setup is required for the MVP.
+// priceInCents, so no Stripe dashboard setup is required. Keep these in sync
+// with the marketing pricing page (app/pricing/page.tsx).
 export const PLANS: Record<PlanId, Plan> = {
   free: {
     id: "free",
     name: "Free",
-    description: "Everything unlocked — test as much as you want, for free.",
+    description: "Everything an individual or small team needs to ship secure mobile apps.",
     priceInCents: 0,
     scanLimit: null,
     features: [
-      "Unlimited scans",
-      "Static analysis (MobSF engine)",
-      "OWASP MASVS findings",
+      "Unlimited Android & iOS scans",
+      "Full OWASP MASVS vulnerability reports",
+      "Plain-English findings & fix guidance",
+      "Runtime protection (anti-tamper, TLS pinning)",
       "Community support",
-    ],
-  },
-  pro: {
-    id: "pro",
-    name: "Pro",
-    description: "All Pro capabilities, now free during open access.",
-    priceInCents: 0,
-    scanLimit: null,
-    features: [
-      "Unlimited scans",
-      "Static & dynamic analysis",
-      "AI-generated remediation reports",
-      "PDF & SARIF export",
-      "Priority email support",
     ],
   },
   team: {
     id: "team",
     name: "Team",
-    description: "All Team capabilities, now free during open access.",
-    priceInCents: 0,
+    description: "Collaboration and workflow integrations for teams shipping on a release cadence.",
+    priceInCents: 3000, // $30 / month
     scanLimit: null,
     features: [
-      "Unlimited scans",
-      "Everything in Pro",
-      "CI/CD pipeline integration",
-      "Compliance dashboard",
-      "Dedicated support",
+      "Everything in Free",
+      "Shared workspace & role-based access",
+      "Jira issue sync for findings",
+      "Scan history & trend tracking",
+      "CI/CD scan automation",
+      "Priority email support",
+    ],
+  },
+  enterprise: {
+    id: "enterprise",
+    name: "Enterprise",
+    description: "Advanced governance, compliance, and support for security-critical organizations.",
+    priceInCents: 6000, // $60 / month
+    scanLimit: null,
+    features: [
+      "Everything in Team",
+      "SSO / SAML & SCIM provisioning",
+      "Custom MASVS policy & compliance reports",
+      "Dedicated security engineer",
+      "SLA-backed support",
+      "On-prem / private deployment options",
     ],
   },
 }

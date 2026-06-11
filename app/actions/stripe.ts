@@ -120,7 +120,7 @@ export async function confirmCheckout(sessionId: string) {
     return { ok: false as const }
   }
 
-  const planId = (checkout.metadata?.planId as PlanId) ?? "pro"
+  const planId = (checkout.metadata?.planId as PlanId) ?? "team"
 
   await db
     .update(subscriptions)
