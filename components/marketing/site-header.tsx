@@ -6,11 +6,11 @@ import { Shield, Menu, X } from "lucide-react"
 import { useSession } from "@/lib/auth-client"
 
 const navLinks = [
-  { name: "Features", href: "#features" },
-  { name: "Services", href: "#services" },
-  { name: "How it works", href: "#how-it-works" },
+  { name: "Features", href: "/#features" },
+  { name: "Services", href: "/#services" },
+  { name: "How it works", href: "/#how-it-works" },
+  { name: "Pricing", href: "/pricing" },
   { name: "Blog", href: "/blog" },
-  { name: "FAQ", href: "#faq" },
 ]
 
 export function SiteHeader() {
@@ -54,6 +54,12 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
+          <Link
+            href="/contact"
+            className="text-sm font-medium text-slate-600 transition-colors hover:text-slate-900"
+          >
+            Book a demo
+          </Link>
           {!isAuthed && (
             <Link
               href="/sign-in"
@@ -94,6 +100,13 @@ export function SiteHeader() {
               </a>
             ))}
             <div className="mt-2 flex flex-col gap-2 border-t border-slate-100 pt-3">
+              <Link
+                href="/contact"
+                onClick={() => setOpen(false)}
+                className="px-2 py-2 text-sm font-medium text-slate-700"
+              >
+                Book a demo
+              </Link>
               {!isAuthed && (
                 <Link href="/sign-in" className="px-2 py-2 text-sm font-medium text-slate-700">
                   Sign in

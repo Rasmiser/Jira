@@ -179,6 +179,21 @@ export const testChecks = pgTable("test_checks", {
   createdAt: timestamp("createdAt").notNull().defaultNow(),
 })
 
+// Contact / book-a-demo submissions from the public marketing site (anonymous)
+export const leads = pgTable("leads", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  company: text("company"),
+  appPlatform: text("appPlatform"), // android | ios | cross | web | other
+  teamSize: text("teamSize"), // 1-10 | 11-50 | 51-200 | 200+
+  inquiryType: text("inquiryType").notNull().default("demo"), // demo | sales | support | general
+  message: text("message"),
+  source: text("source").notNull().default("contact"),
+  status: text("status").notNull().default("new"), // new | contacted | qualified | closed
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+})
+
 // Newsletter signups from the public landing page (not user-scoped — anonymous)
 export const newsletterSubscribers = pgTable("newsletter_subscribers", {
   id: text("id").primaryKey(),

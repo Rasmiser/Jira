@@ -5,26 +5,26 @@ const columns = [
   {
     title: "Product",
     links: [
-      { name: "Features", href: "#features" },
-      { name: "How it works", href: "#how-it-works" },
-      { name: "FAQ", href: "#faq" },
+      { name: "Features", href: "/#features" },
+      { name: "How it works", href: "/#how-it-works" },
+      { name: "Pricing", href: "/pricing" },
+      { name: "FAQ", href: "/#faq" },
     ],
   },
   {
     title: "Company",
     links: [
-      { name: "About", href: "#" },
+      { name: "About", href: "/about" },
       { name: "Blog", href: "/blog" },
-      { name: "Careers", href: "#" },
-      { name: "Contact", href: "#" },
+      { name: "Contact", href: "/contact" },
     ],
   },
   {
     title: "Legal",
     links: [
-      { name: "Privacy", href: "#" },
-      { name: "Terms", href: "#" },
-      { name: "Security", href: "#" },
+      { name: "Privacy", href: "/privacy" },
+      { name: "Terms", href: "/terms" },
+      { name: "Security", href: "/security" },
     ],
   },
 ]
@@ -52,9 +52,9 @@ export function SiteFooter() {
               <ul className="mt-4 space-y-3">
                 {col.links.map((link) => (
                   <li key={link.name}>
-                    <a href={link.href} className="text-sm text-slate-600 transition-colors hover:text-slate-900">
+                    <Link href={link.href} className="text-sm text-slate-600 transition-colors hover:text-slate-900">
                       {link.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>

@@ -59,23 +59,23 @@ const services = [
 const highlights = [
   {
     icon: Server,
-    title: "1000+ Real Devices",
-    description: "Wide range of devices at your fingertips",
+    title: "Built-in test runners",
+    description: "Run each suite on demand from your dashboard",
   },
   {
     icon: Layers,
-    title: "15+ OS Versions",
+    title: "Android, iOS & cross-platform",
     description: "Comprehensive coverage across platforms",
   },
   {
     icon: BarChart3,
-    title: "Detailed Reports",
-    description: "Clear insights to improve quality and performance",
+    title: "Scored, actionable reports",
+    description: "Clear grades and fixes to improve every release",
   },
   {
     icon: Headphones,
-    title: "Expert Support",
-    description: "QA experts to support you at every step",
+    title: "Guided remediation",
+    description: "Plain-English recommendations on every check",
   },
 ]
 
@@ -84,12 +84,13 @@ export function Services() {
     <section id="services" className="bg-white py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Services we provide</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Testing suites</p>
           <h2 className="mt-3 text-balance text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            End-to-end mobile app testing
+            Self-serve testing built into the platform
           </h2>
           <p className="mt-4 text-pretty text-lg text-slate-600">
-            Comprehensive testing to ensure quality, performance and user satisfaction across every release.
+            Beyond security scanning, run functional, performance, and UX test suites on your builds — all from your
+            RASMISER dashboard, no agency required.
           </p>
         </div>
 
