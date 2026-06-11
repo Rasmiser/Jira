@@ -50,7 +50,7 @@ const tiers: Tier[] = [
       "CI/CD scan automation",
       "Priority email support",
     ],
-    cta: { label: "Start free trial", href: "/sign-up" },
+    cta: { label: "Upgrade to Team", href: "/dashboard/billing?plan=team" },
     featured: true,
     note: "Billed monthly — cancel anytime",
   },
@@ -67,7 +67,7 @@ const tiers: Tier[] = [
       "SLA-backed support",
       "On-prem / private deployment options",
     ],
-    cta: { label: "Get started", href: "/sign-up" },
+    cta: { label: "Upgrade to Enterprise", href: "/dashboard/billing?plan=enterprise" },
   },
 ]
 

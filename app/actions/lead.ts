@@ -2,6 +2,10 @@
 
 import { db } from "@/lib/db"
 import { leads } from "@/lib/db/schema"
+import { desc, eq, sql } from "drizzle-orm"
+import { revalidatePath } from "next/cache"
+import { getSession } from "@/lib/subscription"
+import { LEAD_STATUSES, type LeadStatus } from "@/lib/leads"
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -54,4 +58,51 @@ export async function submitLead(formData: FormData): Promise<LeadResult> {
     console.log("[v0] lead submit error:", err)
     return { ok: false, message: "Something went wrong. Please try again." }
   }
+}
+
+/**
+ * Returns all inbound leads, newest first. Requires an authenticated session —
+ * leads are not user-scoped because they are a shared team inbox.
+ */
+export async function getLeads() {
+  const session = await getSession()
+  if (!session?.user) throw new Error("Unauthorized")
+
+  return db.select().from(leads).orderBy(desc(leads.createdAt))
+}
+
+/**
+ * Returns counts of leads grouped by status for the dashboard summary cards.
+ */
+export async function getLeadStats() {
+  const session = await getSession()
+  if (!session?.user) throw new Error("Unauthorized")
+
+  const rows = await db
+    .select({ status: leads.status, count: sql<number>`count(*)::int` })
+    .from(leads)
+    .groupBy(leads.status)
+
+  const counts: Record<string, number> = {}
+  let total = 0
+  for (const r of rows) {
+    counts[r.status] = Number(r.count)
+    total += Number(r.count)
+  }
+  return { counts, total }
+}
+
+/**
+ * Updates the pipeline status of a single lead.
+ */
+export async function updateLeadStatus(id: string, status: LeadStatus) {
+  const session = await getSession()
+  if (!session?.user) throw new Error("Unauthorized")
+
+  if (!LEAD_STATUSES.includes(status)) {
+    throw new Error("Invalid status")
+  }
+
+  await db.update(leads).set({ status }).where(eq(leads.id, id))
+  revalidatePath("/dashboard/leads")
 }

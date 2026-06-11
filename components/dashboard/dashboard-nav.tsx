@@ -11,6 +11,7 @@ import {
   ShieldHalf,
   Radar,
   FlaskConical,
+  Inbox,
 } from "lucide-react"
 import { SignOutButton } from "./sign-out-button"
 
@@ -20,6 +21,7 @@ const NAV = [
   { href: "/dashboard/testing", label: "Test suites", icon: FlaskConical },
   { href: "/dashboard/protection", label: "Protection", icon: ShieldHalf },
   { href: "/dashboard/threats", label: "Live threats", icon: Radar },
+  { href: "/dashboard/leads", label: "Leads", icon: Inbox },
   { href: "/dashboard/billing", label: "Billing", icon: CreditCard },
 ]
 
