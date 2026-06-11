@@ -39,8 +39,8 @@ const tiers: Tier[] = [
   },
   {
     name: "Team",
-    price: "$0",
-    period: "during beta",
+    price: "$30",
+    period: "month",
     description: "Collaboration and workflow integrations for teams shipping on a release cadence.",
     features: [
       "Everything in Free",
@@ -50,13 +50,14 @@ const tiers: Tier[] = [
       "CI/CD scan automation",
       "Priority email support",
     ],
-    cta: { label: "Start free", href: "/sign-up" },
+    cta: { label: "Start free trial", href: "/sign-up" },
     featured: true,
-    note: "Free while in beta — no card required",
+    note: "Billed monthly — cancel anytime",
   },
   {
     name: "Enterprise",
-    price: "Custom",
+    price: "$60",
+    period: "month",
     description: "Advanced governance, compliance, and support for security-critical organizations.",
     features: [
       "Everything in Team",
@@ -66,7 +67,7 @@ const tiers: Tier[] = [
       "SLA-backed support",
       "On-prem / private deployment options",
     ],
-    cta: { label: "Talk to sales", href: "/contact" },
+    cta: { label: "Get started", href: "/sign-up" },
   },
 ]
 
