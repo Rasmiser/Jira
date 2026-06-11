@@ -43,7 +43,7 @@ export function Hero({ ctaHref }: { ctaHref: string }) {
           <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-500">
             <span className="flex items-center gap-1.5">
               <CheckCircle2 className="h-4 w-4 text-blue-600" aria-hidden="true" />
-              100% free — every feature
+              Unlimited scans, free forever
             </span>
             <span className="flex items-center gap-1.5">
               <CheckCircle2 className="h-4 w-4 text-blue-600" aria-hidden="true" />

@@ -8,9 +8,10 @@ import { useSession } from "@/lib/auth-client"
 
 const navLinks = [
   { name: "Features", href: "/#features" },
-  { name: "Services", href: "/#services" },
   { name: "How it works", href: "/#how-it-works" },
+  { name: "Live demo", href: "/#live-demo" },
   { name: "Pricing", href: "/pricing" },
+  { name: "Compare", href: "/compare" },
   { name: "Blog", href: "/blog" },
 ]
 

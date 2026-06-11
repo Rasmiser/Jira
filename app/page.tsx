@@ -9,6 +9,7 @@ import { LiveDemo } from "@/components/marketing/live-demo"
 import { CaseStudies } from "@/components/marketing/case-studies"
 import { Testimonials } from "@/components/marketing/testimonials"
 import { BlogSection } from "@/components/marketing/blog-section"
+import { Pricing } from "@/components/marketing/pricing"
 import { FAQ } from "@/components/marketing/faq"
 import { CtaSection } from "@/components/marketing/cta-section"
 import { NewsletterSection } from "@/components/marketing/newsletter-section"
@@ -30,6 +31,7 @@ export default function Home() {
       <CaseStudies />
       <Testimonials />
       <BlogSection />
+      <Pricing />
       <FAQ />
       <CtaSection ctaHref={ctaHref} />
       <NewsletterSection />
