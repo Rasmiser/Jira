@@ -22,6 +22,141 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "ai-agents-can-now-pay-what-it-means-for-app-security",
+    title: "AI Agents Can Now Pay: What Visa x OpenAI Means for App Security",
+    excerpt:
+      "Visa and OpenAI just let AI agents make authorized payments through ChatGPT. Agentic commerce is here, and it reshapes the mobile attack surface overnight.",
+    category: "Top News",
+    author: "Marcus Webb",
+    role: "Principal Security Engineer",
+    date: "2026-06-11",
+    readingTime: "6 min read",
+    image: "/images/blog/ai-agent-payments.png",
+    imageAlt: "Illustration of an AI agent making an authorized payment through a chat interface",
+    intro:
+      "In the last 48 hours, Visa partnered with OpenAI to let AI agents conduct authorized payments directly through ChatGPT, while Samsung announced it will bake ChatGPT, Gemini, and Claude into its core operations. Agentic commerce is no longer a demo, it is shipping. For teams building mobile apps, an agent that can move money is a brand-new, high-value attack surface.",
+    sections: [
+      {
+        heading: "Why agentic payments change the threat model",
+        paragraphs: [
+          "Traditional mobile security assumes a human taps the buttons. When an autonomous agent can authorize a purchase, the gap between intent and action widens, and that gap is exactly where attackers operate. A poisoned prompt or a manipulated context window can now trigger a real transaction.",
+          "Apps integrating agentic payment flows need to treat every agent action as untrusted until verified, the same way they treat raw user input.",
+        ],
+      },
+      {
+        heading: "The new failure modes to watch",
+        paragraphs: [
+          "Our research team is already mapping these flows in customer builds. The recurring risks look familiar but hit harder when money is involved.",
+        ],
+        bullets: [
+          "Payment tokens or session keys for the agent stored insecurely on-device",
+          "Prompt injection that redirects an authorized purchase to an attacker",
+          "Missing confirmation steps before an agent commits an irreversible action",
+          "Over-broad agent permissions that survive past a single transaction",
+        ],
+      },
+      {
+        heading: "How RASMISER helps teams ship agentic features safely",
+        paragraphs: [
+          "RASMISER traces where untrusted content meets an agent's decision path and where payment credentials live in the binary. We flag direct client-to-provider calls that should be proxied, insecurely stored agent tokens, and missing transaction confirmation gates, each mapped to OWASP MASVS.",
+          "Combined with runtime protection, teams can ship agent-driven commerce with anti-tampering and TLS pinning in place, so the payment paths stay protected after launch.",
+        ],
+      },
+    ],
+    takeaway:
+      "Letting an AI agent spend money is a powerful feature and a serious responsibility. Scan the agent's payment path the same week you build it, before an attacker finds the gap between intent and authorization.",
+  },
+  {
+    slug: "fable-5-jailbroken-on-day-one-lessons-for-builders",
+    title: "Fable 5 Was Jailbroken on Day One: Lessons for App Builders",
+    excerpt:
+      "Anthropic shipped a guardrailed consumer model and researchers broke it within hours. If you embed an LLM in your app, assume its safety layer will fail.",
+    category: "Top News",
+    author: "Sarah Chen",
+    role: "Head of Security Research",
+    date: "2026-06-11",
+    readingTime: "5 min read",
+    image: "/images/blog/jailbroken-llm.png",
+    imageAlt: "Illustration of an AI model with safety guardrails being broken open",
+    intro:
+      "This week Anthropic released Fable 5, a consumer-facing version of its powerful Mythos model wrapped in safety guardrails, and researchers reported jailbreaking it almost immediately. At the same time, CEO Dario Amodei called for mandatory government testing of frontier models. The lesson for app builders is blunt: a provider's safety layer is not your security boundary.",
+    sections: [
+      {
+        heading: "Provider guardrails are not your guardrails",
+        paragraphs: [
+          "When you embed an LLM in your app, it is tempting to assume the provider's safety filters protect you. Day-one jailbreaks prove otherwise. If a determined user can bypass the model's restrictions, your app must still behave safely with whatever output comes back.",
+          "Treat every model response as untrusted data, not as a trusted instruction. Validate it before you act on it.",
+        ],
+      },
+      {
+        heading: "What this looks like in a mobile build",
+        paragraphs: [
+          "We see the same gaps repeatedly when teams wire an LLM into a client.",
+        ],
+        bullets: [
+          "Model output used directly in a system command, query, or deep link",
+          "No output validation before rendering or executing model responses",
+          "System prompts and provider keys embedded in the binary",
+          "Sensitive inference inputs and outputs written to plaintext logs",
+        ],
+      },
+      {
+        heading: "Scanning the AI layer before launch",
+        paragraphs: [
+          "RASMISER treats AI integrations as first-class citizens in the scan. We identify where untrusted input meets model calls, where keys are exposed, and where AI-derived data is acted on without validation, then explain each risk in plain English.",
+          "As regulators move toward mandatory model testing, having an auditable, MASVS-aligned report of how your app handles AI output turns a compliance scramble into a download.",
+        ],
+      },
+    ],
+    takeaway:
+      "If a frontier model can be jailbroken on day one, your app cannot rely on its guardrails. Validate every model response and scan the AI layer like any other untrusted input.",
+  },
+  {
+    slug: "based-grok-goes-viral-the-no-filter-ai-risk",
+    title: "\"Based Grok\" Goes Viral: The Hidden Risk of No-Filter AI",
+    excerpt:
+      "A candid Grok reply blew up across X this week. Beyond the memes, no-filter AI in your app is a reputational and security liability worth scanning for.",
+    category: "Viral Moments",
+    author: "Elena Rodriguez",
+    role: "VP of Engineering",
+    date: "2026-06-11",
+    readingTime: "4 min read",
+    image: "/images/blog/viral-grok-moment.png",
+    imageAlt: "Illustration of an AI chatbot reply going viral on social media",
+    intro:
+      "The viral AI moment of the week was Elon Musk amplifying a \"Based Grok\" post on X, praising the model's candid, no-filter response to a pointed question. Screenshots and memes spread fast, reigniting the debate between unfiltered candor and AI safety. It is funny on a timeline, but for anyone embedding a chat model in their app, no-filter AI is a real liability.",
+    sections: [
+      {
+        heading: "Why a viral reply is a product risk",
+        paragraphs: [
+          "When your app surfaces model output to users, you own what it says. A single unfiltered, offensive, or misleading response can become a screenshot that defines your brand for a news cycle.",
+          "The same lack of filtering that produces a viral quip can also leak system prompts, repeat injected instructions, or surface manipulated content to your users.",
+        ],
+      },
+      {
+        heading: "Where this bites mobile apps",
+        paragraphs: [
+          "Beyond reputation, no-filter output intersects with concrete security gaps we scan for.",
+        ],
+        bullets: [
+          "Untrusted model output rendered without moderation or validation",
+          "Prompt injection that turns a chat feature into a misinformation vector",
+          "System prompts recoverable from the binary or from clever queries",
+          "No logging or rate controls to catch abuse before it spreads",
+        ],
+      },
+      {
+        heading: "Ship personality without shipping liability",
+        paragraphs: [
+          "RASMISER flags where untrusted content flows into and out of your model, where prompts and keys are exposed, and where responses are acted on without checks. You can give your assistant a voice while still controlling what reaches your users.",
+          "With runtime protection in place, the model endpoints and the data flowing to them stay locked down, so a viral moment stays on-brand instead of becoming an incident.",
+        ],
+      },
+    ],
+    takeaway:
+      "No-filter AI is great for going viral and dangerous for shipping in production. Decide deliberately what your model can say, then scan the integration so a meme never becomes a breach.",
+  },
+  {
     slug: "securing-new-build-apps-before-launch",
     title: "The 7 Security Gaps Hiding in Every New Build App",
     excerpt:
