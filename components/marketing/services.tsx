@@ -1,10 +1,10 @@
 import {
-  Smartphone,
-  MonitorSmartphone,
-  Gauge,
-  Lock,
-  LayoutPanelLeft,
-  Cog,
+  FileSearch,
+  Bug,
+  PackageSearch,
+  KeyRound,
+  ClipboardCheck,
+  GitBranch,
   Server,
   Layers,
   BarChart3,
@@ -13,69 +13,69 @@ import {
 
 const services = [
   {
-    icon: Smartphone,
-    title: "Functional Testing",
-    description: "Ensure all features work as expected across devices and platforms.",
-    color: "text-violet-600",
-    bg: "bg-violet-100",
-  },
-  {
-    icon: MonitorSmartphone,
-    title: "Compatibility Testing",
-    description: "Test across multiple devices, OS versions and screen sizes for a seamless experience.",
+    icon: FileSearch,
+    title: "Static Analysis (SAST)",
+    description: "Decompile and inspect your binary for insecure storage, hardcoded secrets, and weak crypto.",
     color: "text-blue-600",
     bg: "bg-blue-100",
   },
   {
-    icon: Gauge,
-    title: "Performance Testing",
-    description: "Check speed, stability, load time and app behavior under real-world conditions.",
-    color: "text-emerald-600",
-    bg: "bg-emerald-100",
-  },
-  {
-    icon: Lock,
-    title: "Security Testing",
-    description: "Identify vulnerabilities and ensure your app and user data are always protected.",
-    color: "text-amber-600",
-    bg: "bg-amber-100",
-  },
-  {
-    icon: LayoutPanelLeft,
-    title: "UI/UX Testing",
-    description: "Validate usability, navigation, layout and overall user experience.",
+    icon: Bug,
+    title: "Malware Detection",
+    description: "Flag malicious code, suspicious SDKs, and known-bad signatures bundled in your build.",
     color: "text-rose-600",
     bg: "bg-rose-100",
   },
   {
-    icon: Cog,
-    title: "Test Automation",
-    description: "Automate regression testing to save time and increase test coverage.",
+    icon: PackageSearch,
+    title: "APK / IPA Risk Analysis",
+    description: "Assess package integrity, exposed components, debug flags, and tampering exposure.",
+    color: "text-amber-600",
+    bg: "bg-amber-100",
+  },
+  {
+    icon: KeyRound,
+    title: "Permission & Privacy Abuse",
+    description: "Detect over-broad permissions and data flows that put user privacy at risk.",
+    color: "text-emerald-600",
+    bg: "bg-emerald-100",
+  },
+  {
+    icon: ClipboardCheck,
+    title: "Compliance Mapping",
+    description: "Every finding mapped to OWASP MASVS, Mobile Top 10, CWE, and CVSS for clean audits.",
     color: "text-teal-600",
     bg: "bg-teal-100",
+  },
+  {
+    icon: GitBranch,
+    title: "CI/CD Security Gates",
+    description: "Automate scans on every release and fail the build when critical issues appear.",
+    color: "text-indigo-600",
+    bg: "bg-indigo-100",
   },
 ]
 
 const highlights = [
   {
     icon: Server,
-    title: "Built-in test runners",
-    description: "Run each suite on demand from your dashboard",
+    title: "Scan in minutes",
+    description: "Upload a build and get results fast",
   },
   {
     icon: Layers,
-    title: "Android, iOS & cross-platform",
-    description: "Comprehensive coverage across platforms",
+    title: "Android & iOS",
+    description: "Full coverage for native and cross-platform",
   },
   {
     icon: BarChart3,
-    title: "Scored, actionable reports",
-    description: "Clear grades and fixes to improve every release",
+    title: "Risk-scored reports",
+    description: "Severity-ranked findings with CVSS scores",
   },
   {
     icon: Headphones,
     title: "Guided remediation",
-    description: "Plain-English recommendations on every check",
+    description: "Plain-English fixes on every finding",
   },
 ]
 
@@ -84,13 +84,13 @@ export function Services() {
     <section id="services" className="bg-white py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Testing suites</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Platform capabilities</p>
           <h2 className="mt-3 text-balance text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            Self-serve testing built into the platform
+            A complete mobile app security platform
           </h2>
           <p className="mt-4 text-pretty text-lg text-slate-600">
-            Beyond security scanning, run functional, performance, and UX test suites on your builds — all from your
-            RASMISER dashboard, no agency required.
+            From static analysis to CI/CD enforcement, RASMISER covers the full mobile threat surface — every finding
+            scored, explained, and mapped to industry standards.
           </p>
         </div>
 
