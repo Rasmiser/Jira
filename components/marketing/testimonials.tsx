@@ -1,3 +1,5 @@
+import { ShieldCheck } from "lucide-react"
+
 const testimonials = [
   {
     quote:
@@ -25,7 +27,21 @@ const testimonials = [
   },
 ]
 
-const logos = ["Meridian", "Flux", "Beacon", "Prism", "Northwind", "Vertex"]
+const audiences = [
+  "Indie developers",
+  "Mobile startups",
+  "Fintech & banking apps",
+  "Healthcare apps",
+  "Agencies & consultancies",
+  "Enterprise security teams",
+]
+
+const standards = [
+  { name: "OWASP MASVS", detail: "Mobile App Security Verification Standard" },
+  { name: "OWASP Mobile Top 10", detail: "Most critical mobile risks" },
+  { name: "CWE", detail: "Common Weakness Enumeration" },
+  { name: "CVSS", detail: "Common Vulnerability Scoring System" },
+]
 
 export function Testimonials() {
   return (
@@ -57,12 +73,36 @@ export function Testimonials() {
           ))}
         </div>
 
-        <div className="mt-16 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 opacity-60">
-          {logos.map((logo) => (
-            <span key={logo} className="text-lg font-semibold tracking-tight text-slate-400">
-              {logo}
-            </span>
-          ))}
+        <div className="mt-16 border-t border-slate-200 pt-12">
+          <p className="text-center text-sm font-medium text-slate-500">Built for teams of every size</p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            {audiences.map((audience) => (
+              <span
+                key={audience}
+                className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-700"
+              >
+                {audience}
+              </span>
+            ))}
+          </div>
+
+          <p className="mt-12 text-center text-sm font-medium text-slate-500">
+            Aligned with recognized security standards
+          </p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {standards.map((standard) => (
+              <div
+                key={standard.name}
+                className="flex flex-col items-center rounded-xl border border-slate-200 bg-white px-4 py-5 text-center"
+              >
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                  <ShieldCheck className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <span className="mt-3 text-sm font-semibold text-slate-900">{standard.name}</span>
+                <span className="mt-1 text-xs leading-relaxed text-slate-500">{standard.detail}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

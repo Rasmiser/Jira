@@ -5,6 +5,7 @@ import { Hero } from "@/components/marketing/hero"
 import { Features } from "@/components/marketing/features"
 import { Services } from "@/components/marketing/services"
 import { HowItWorks } from "@/components/marketing/how-it-works"
+import { CaseStudies } from "@/components/marketing/case-studies"
 import { Testimonials } from "@/components/marketing/testimonials"
 import { BlogSection } from "@/components/marketing/blog-section"
 import { FAQ } from "@/components/marketing/faq"
@@ -24,6 +25,7 @@ export default function Home() {
       <Features />
       <Services />
       <HowItWorks />
+      <CaseStudies />
       <Testimonials />
       <BlogSection />
       <FAQ />
