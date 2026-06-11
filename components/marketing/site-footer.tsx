@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Shield } from "lucide-react"
+import { solutionPages } from "@/lib/solutions"
 
 const columns = [
   {
@@ -9,8 +10,13 @@ const columns = [
       { name: "How it works", href: "/#how-it-works" },
       { name: "Pricing", href: "/pricing" },
       { name: "Compare", href: "/compare" },
+      { name: "ROI calculator", href: "/roi-calculator" },
       { name: "FAQ", href: "/#faq" },
     ],
+  },
+  {
+    title: "Solutions",
+    links: solutionPages.map((p) => ({ name: p.metaTitle, href: `/solutions/${p.slug}` })),
   },
   {
     title: "Company",
@@ -34,7 +40,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-slate-200 bg-white">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
+        <div className="grid gap-10 md:grid-cols-3 lg:grid-cols-[1.5fr_1fr_1fr_1fr_1fr]">
           <div>
             <Link href="/" className="flex items-center gap-2">
               <span className="flex h-8 w-8 items-center justify-center rounded-md bg-blue-600 text-white">

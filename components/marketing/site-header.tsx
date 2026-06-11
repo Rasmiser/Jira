@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { track } from "@vercel/analytics"
 import { Shield, Menu, X } from "lucide-react"
 import { useSession } from "@/lib/auth-client"
 
@@ -70,6 +71,7 @@ export function SiteHeader() {
           )}
           <Link
             href={ctaHref}
+            onClick={() => track("header_cta_clicked", { authed: isAuthed, location: "desktop" })}
             className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
           >
             {ctaLabel}
@@ -114,6 +116,7 @@ export function SiteHeader() {
               )}
               <Link
                 href={ctaHref}
+                onClick={() => track("header_cta_clicked", { authed: isAuthed, location: "mobile" })}
                 className="rounded-lg bg-blue-600 px-4 py-2 text-center text-sm font-semibold text-white"
               >
                 {ctaLabel}

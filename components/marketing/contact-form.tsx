@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { track } from "@vercel/analytics"
 import { submitLead, type LeadResult } from "@/app/actions/lead"
 
 const inquiryOptions = [
@@ -34,11 +35,15 @@ export function ContactForm({ defaultInquiry = "demo" }: { defaultInquiry?: stri
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
+    const inquiryType = String(formData.get("inquiryType") ?? "")
     const form = e.currentTarget
     startTransition(async () => {
       const res = await submitLead(formData)
       setResult(res)
-      if (res.ok) form.reset()
+      if (res.ok) {
+        track("lead_submitted", { source: "contact", inquiryType })
+        form.reset()
+      }
     })
   }
 
