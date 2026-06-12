@@ -66,3 +66,15 @@ export function getPlan(id: string | null | undefined): Plan {
   if (id && id in PLANS) return PLANS[id as PlanId]
   return PLANS.free
 }
+
+// Ordered tiers — higher rank includes everything in lower tiers.
+export const PLAN_RANK: Record<PlanId, number> = {
+  free: 0,
+  team: 1,
+  enterprise: 2,
+}
+
+/** True when `userPlan` is the same tier or higher than `requiredPlan`. */
+export function planIncludes(userPlan: PlanId, requiredPlan: PlanId): boolean {
+  return PLAN_RANK[userPlan] >= PLAN_RANK[requiredPlan]
+}

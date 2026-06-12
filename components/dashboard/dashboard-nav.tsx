@@ -12,11 +12,13 @@ import {
   Radar,
   FlaskConical,
   Inbox,
+  LayoutGrid,
 } from "lucide-react"
 import { SignOutButton } from "./sign-out-button"
 
 const NAV = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
+  { href: "/dashboard/features", label: "Features", icon: LayoutGrid },
   { href: "/dashboard/scan/new", label: "New scan", icon: ScanLine },
   { href: "/dashboard/testing", label: "Test suites", icon: FlaskConical },
   { href: "/dashboard/protection", label: "Protection", icon: ShieldHalf },
