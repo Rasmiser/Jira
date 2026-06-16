@@ -22,6 +22,186 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "ai-worms-miasma-ironworm-target-coding-tools",
+    title: "AI Worms Are Here: Miasma and IronWorm Target Your Dev Tools",
+    excerpt:
+      "Self-replicating AI worms now hunt coding assistants, embedding backdoors in config files to steal API keys. The software supply chain just got a new predator.",
+    category: "Cyber Threats",
+    author: "Marcus Webb",
+    role: "Principal Security Engineer",
+    date: "2026-06-16",
+    readingTime: "6 min read",
+    image: "/images/blog/ai-supply-chain-worm.png",
+    imageAlt: "Illustration of a self-replicating AI worm spreading through a software supply chain",
+    intro:
+      "Researchers this week detailed Miasma and IronWorm, two campaigns of self-replicating AI worms that target AI coding tools directly. Instead of attacking a server, they embed backdoors into configuration files, harvesting API keys and credentials as developers build. For mobile teams, the threat is personal: the worm can ride your toolchain straight into your build artifacts.",
+    sections: [
+      {
+        heading: "Why AI worms break the old supply-chain model",
+        paragraphs: [
+          "Traditional supply-chain attacks rely on a poisoned dependency you eventually pull. AI worms are adaptive: they identify target-specific weaknesses and replicate without human direction, jumping between coding assistants, config files, and credential stores.",
+          "Because they live in your developer environment, anything they touch, including the secrets baked into a mobile build, is at risk before the app ever ships.",
+        ],
+      },
+      {
+        heading: "What lands in your mobile build",
+        paragraphs: [
+          "When a worm compromises the toolchain, the damage shows up in the artifact. These are the recurring traces we scan for.",
+        ],
+        bullets: [
+          "API keys and tokens harvested from config files and re-embedded in the binary",
+          "Backdoor endpoints injected into build scripts and bundled resources",
+          "Tampered dependencies that survive into the shipped package",
+          "Credentials written to insecure on-device storage during build automation",
+        ],
+      },
+      {
+        heading: "How RASMISER catches a compromised build",
+        paragraphs: [
+          "RASMISER decompiles every release and flags hardcoded secrets, unexpected network endpoints, and tampered components, each mapped to OWASP MASVS. A worm that slips a backdoor into your config shows up as a concrete finding in the report, not a silent passenger.",
+          "Wired into CI, the scan runs on every build, so a compromised artifact fails the pipeline instead of reaching the store.",
+        ],
+      },
+    ],
+    takeaway:
+      "AI worms turn your own developer tools into an attack vector. Scanning the final build artifact, not just your source, is how you catch a backdoor the worm left behind.",
+  },
+  {
+    slug: "frontier-models-auto-generate-exploits-patch-gap",
+    title: "When AI Writes Exploits in Hours: The Patch Gap Just Collapsed",
+    excerpt:
+      "Frontier models like Claude Mythos can now generate working exploits from a patch within hours. N-day vulnerabilities are suddenly far more dangerous.",
+    category: "Cyber Threats",
+    author: "Sarah Chen",
+    role: "Head of Security Research",
+    date: "2026-06-16",
+    readingTime: "6 min read",
+    image: "/images/blog/ai-autonomous-exploit.png",
+    imageAlt: "Illustration of an AI model generating an exploit from a security patch",
+    intro:
+      "New research shows frontier models, including Claude Mythos, can autonomously generate functional exploits for freshly patched vulnerabilities, sometimes kernel-level, within hours of a fix being published. The traditional patch gap, the window between a fix shipping and attackers weaponizing it, has effectively collapsed. For mobile teams, slow update adoption is now a critical exposure.",
+    sections: [
+      {
+        heading: "Why N-day just became as dangerous as zero-day",
+        paragraphs: [
+          "Defenders used to count on days or weeks between a public patch and a working exploit. When an AI can read a code diff and produce an exploit before lunch, every unpatched dependency in your app is live ammunition.",
+          "Mobile apps are especially exposed: users update on their own schedule, and an outdated SDK or library can sit vulnerable on millions of devices long after a fix exists.",
+        ],
+      },
+      {
+        heading: "Where the risk hides in a mobile app",
+        paragraphs: [
+          "The exposure is almost always in what you bundle and how fast you can ship a fix.",
+        ],
+        bullets: [
+          "Outdated third-party SDKs and native libraries with known CVEs",
+          "Pinned dependency versions that never get bumped after launch",
+          "No inventory of what is actually compiled into the shipped binary",
+          "Slow release cadence that leaves patched fixes stuck in review",
+        ],
+      },
+      {
+        heading: "How RASMISER shortens your exposure window",
+        paragraphs: [
+          "RASMISER inventories the components compiled into your build and flags dependencies with known vulnerabilities, scored by severity so you patch the dangerous ones first. You see exactly what an AI-assisted attacker could target.",
+          "Running in CI, the scan turns dependency hygiene into an automatic gate, so a known-vulnerable library fails the build instead of shipping to users who may not update for weeks.",
+        ],
+      },
+    ],
+    takeaway:
+      "If AI can weaponize a patch in hours, your only defense is knowing what you ship and fixing it fast. Continuous dependency scanning is now table stakes, not a nice-to-have.",
+  },
+  {
+    slug: "searchleak-prompt-injection-trusted-proxy",
+    title: "SearchLeak: How Prompt Injection Turns Trusted Tools Against You",
+    excerpt:
+      "The SearchLeak attack used malicious query parameters to bypass Copilot guardrails and exfiltrate data through Bing as a trusted proxy. Prompt injection is still unsolved.",
+    category: "Cyber Threats",
+    author: "Marcus Webb",
+    role: "Principal Security Engineer",
+    date: "2026-06-16",
+    readingTime: "5 min read",
+    image: "/images/blog/prompt-injection-proxy.png",
+    imageAlt: "Illustration of a prompt injection attack exfiltrating data through a trusted search proxy",
+    intro:
+      "Researchers disclosed SearchLeak this week, a parameter-to-prompt injection attack that smuggled malicious instructions through query parameters to bypass Copilot guardrails, exfiltrating organizational data by using Bing as a trusted proxy. It is a sharp reminder that prompt injection remains an unsolved architectural problem: LLMs still cannot reliably separate your instructions from untrusted content.",
+    sections: [
+      {
+        heading: "Why trusted proxies make injection worse",
+        paragraphs: [
+          "SearchLeak works because the data leaves through a channel everyone trusts. The model follows injected instructions and routes sensitive data out via a legitimate service, so nothing looks obviously malicious.",
+          "Any mobile app that feeds untrusted content, search results, web pages, user input, into an LLM can be steered the same way.",
+        ],
+      },
+      {
+        heading: "How this pattern reaches mobile apps",
+        paragraphs: [
+          "On a phone, injection often chains with platform features to escalate quickly.",
+        ],
+        bullets: [
+          "Untrusted content concatenated directly into prompts without isolation",
+          "Deep links and clipboard data carrying injected instructions",
+          "Model responses that trigger network calls or exfiltrate data through allowed hosts",
+          "System prompts recoverable through crafted queries",
+        ],
+      },
+      {
+        heading: "How RASMISER maps your injection surface",
+        paragraphs: [
+          "RASMISER traces how your app builds prompts and where untrusted data flows into them, flagging the paths most likely to be abused and the outbound channels that could become an exfiltration route, all mapped to OWASP MASVS.",
+          "With runtime protection, the endpoints your model talks to stay pinned and tamper-resistant, so an injected instruction has nowhere clean to send your users' data.",
+        ],
+      },
+    ],
+    takeaway:
+      "Prompt injection is an architectural reality, not a bug you patch once. Assume untrusted content can hijack your model and scan for the data paths it could abuse before you ship.",
+  },
+  {
+    slug: "agentic-frameworks-unauthenticated-endpoints-killchains",
+    title: "Autonomous Kill Chains: The Risk of Unauthenticated AI Agents",
+    excerpt:
+      "Attackers now use agentic frameworks to run real-time, multi-step intrusions. Unauthenticated agent endpoints can be coerced into executing unauthorized tasks.",
+    category: "Cyber Threats",
+    author: "Elena Rodriguez",
+    role: "VP of Engineering",
+    date: "2026-06-16",
+    readingTime: "5 min read",
+    image: "/images/blog/agentic-killchain.png",
+    imageAlt: "Illustration of an autonomous AI agent performing a multi-step cyber attack kill chain",
+    intro:
+      "Security teams are tracking a shift from static attack scripts to agentic frameworks that improvise. These AI agents run multi-step kill chains in real time, harvesting credentials and pivoting across networks without human input. The newest concern: unauthenticated agent endpoints that can be coerced into executing unauthorized, multi-step tasks. If your app exposes an agent, that agent is now an attack surface.",
+    sections: [
+      {
+        heading: "Why autonomous agents change the math",
+        paragraphs: [
+          "A static script does one thing. An agent improvises, adapting its next move to whatever it finds. When an agent endpoint lacks authentication or scoping, an attacker can hand it a goal and let it work out the steps.",
+          "Mobile apps increasingly ship agentic features, and an under-secured agent endpoint is an open door to whatever that agent can reach.",
+        ],
+      },
+      {
+        heading: "What we look for in agentic apps",
+        paragraphs: [
+          "The failure modes are concrete and recurring when teams wire agents into a client.",
+        ],
+        bullets: [
+          "Unauthenticated or weakly scoped agent endpoints",
+          "Over-broad agent permissions that persist beyond a single task",
+          "Missing confirmation gates before an agent takes irreversible actions",
+          "Agent credentials and tool tokens stored insecurely on-device",
+        ],
+      },
+      {
+        heading: "How RASMISER secures the agent surface",
+        paragraphs: [
+          "RASMISER flags exposed agent endpoints, insecurely stored agent credentials, and missing authorization on the paths an agent can trigger, each explained in plain English and mapped to OWASP MASVS.",
+          "Combined with runtime protection, the agent's endpoints and tokens stay locked down with anti-tampering and TLS pinning, so a coerced agent cannot become a multi-step kill chain inside your app.",
+        ],
+      },
+    ],
+    takeaway:
+      "Agentic features are powerful and they widen your attack surface. Authenticate every agent endpoint, scope every permission, and scan the agent paths before an attacker turns your assistant into an intruder.",
+  },
+  {
     slug: "ai-agents-can-now-pay-what-it-means-for-app-security",
     title: "AI Agents Can Now Pay: What Visa x OpenAI Means for App Security",
     excerpt:
