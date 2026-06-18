@@ -4,7 +4,7 @@ import { TEST_TYPES } from "@/lib/test-engine"
 import { getTestIcon } from "@/components/dashboard/test-icons"
 import { gradeColor } from "@/components/dashboard/severity-badge"
 import { cn } from "@/lib/utils"
-import { ArrowRight, FlaskConical, ArrowUpRight } from "lucide-react"
+import { ArrowRight, FlaskConical, ArrowUpRight, Sparkles, Smartphone } from "lucide-react"
 
 function formatDate(d: Date | string) {
   return new Date(d).toLocaleDateString("en-US", {
@@ -34,6 +34,38 @@ export default async function TestingPage() {
           detailed report.
         </p>
       </div>
+
+      {/* CoTester / device cloud callout */}
+      <Link
+        href="/dashboard/test-cases"
+        className="group mt-8 flex flex-col gap-4 border border-border bg-card p-6 transition-colors hover:bg-accent sm:flex-row sm:items-center sm:justify-between"
+      >
+        <div className="flex items-start gap-4">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-border bg-muted text-foreground">
+            <Sparkles className="h-5 w-5" aria-hidden="true" />
+          </div>
+          <div>
+            <h2 className="font-medium text-foreground">
+              AI test authoring with CoTester
+            </h2>
+            <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted-foreground">
+              Describe a flow in plain English and generate a reusable,
+              structured test case, then run it across the real device cloud.
+            </p>
+            <p className="mt-3 flex items-center gap-1.5 text-xs uppercase tracking-wider text-muted-foreground">
+              <Smartphone className="h-3.5 w-3.5" aria-hidden="true" />
+              Real device cloud included
+            </p>
+          </div>
+        </div>
+        <span className="inline-flex shrink-0 items-center gap-2 text-sm font-medium text-foreground">
+          Open test case library
+          <ArrowRight
+            className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+            aria-hidden="true"
+          />
+        </span>
+      </Link>
 
       {/* Test type tools */}
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
