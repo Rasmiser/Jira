@@ -179,6 +179,51 @@ export const testChecks = pgTable("test_checks", {
   createdAt: timestamp("createdAt").notNull().defaultNow(),
 })
 
+// ---------------------------------------------------------------------------
+// Test cases — the reusable, AI-authored ("CoTester") test case library. Each
+// case holds plain-English intent plus structured, automatable steps. Cases are
+// executed against the real device cloud, producing test_case_runs.
+// ---------------------------------------------------------------------------
+export const testCases = pgTable("test_cases", {
+  id: text("id").primaryKey(),
+  userId: text("userId").notNull(),
+  title: text("title").notNull(),
+  description: text("description").notNull(), // plain-English scenario
+  platform: text("platform").notNull().default("cross"), // android | ios | web | cross
+  priority: text("priority").notNull().default("medium"), // low | medium | high | critical
+  tags: jsonb("tags").notNull().default([]), // string[]
+  status: text("status").notNull().default("draft"), // draft | ready | archived
+  source: text("source").notNull().default("manual"), // ai | manual
+  // steps: Array<{ action: string; target: string; expected: string }>
+  steps: jsonb("steps").notNull().default([]),
+  lastRunStatus: text("lastRunStatus"), // passed | failed | flaky
+  lastRunAt: timestamp("lastRunAt"),
+  runCount: integer("runCount").notNull().default(0),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+})
+
+// Executions of a test case against a chosen real-device-cloud device.
+export const testCaseRuns = pgTable("test_case_runs", {
+  id: text("id").primaryKey(),
+  userId: text("userId").notNull(),
+  caseId: text("caseId").notNull(),
+  caseTitle: text("caseTitle").notNull(),
+  deviceId: text("deviceId").notNull(),
+  deviceName: text("deviceName").notNull(),
+  platform: text("platform").notNull(),
+  osVersion: text("osVersion"),
+  browser: text("browser"),
+  status: text("status").notNull(), // passed | failed | flaky
+  durationMs: integer("durationMs").notNull().default(0),
+  passedSteps: integer("passedSteps").notNull().default(0),
+  failedSteps: integer("failedSteps").notNull().default(0),
+  totalSteps: integer("totalSteps").notNull().default(0),
+  // stepResults: Array<{ index: number; action: string; target: string; expected: string; status: 'passed' | 'failed'; note: string | null; durationMs: number }>
+  stepResults: jsonb("stepResults").notNull().default([]),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+})
+
 // Contact / book-a-demo submissions from the public marketing site (anonymous)
 export const leads = pgTable("leads", {
   id: text("id").primaryKey(),
