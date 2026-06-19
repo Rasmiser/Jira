@@ -22,6 +22,186 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "mcp-servers-new-attack-surface-ai-agents",
+    title: "MCP Servers Are the New Attack Surface for AI Agents",
+    excerpt:
+      "The Model Context Protocol lets AI agents plug into your tools, but a single malicious or over-permissioned MCP server can hand an attacker the keys to everything.",
+    category: "Emerging Tech",
+    author: "Marcus Webb",
+    role: "Principal Security Engineer",
+    date: "2026-06-18",
+    readingTime: "6 min read",
+    image: "/images/blog/mcp-server-risk.png",
+    imageAlt: "Illustration of an AI assistant connected to multiple MCP tool servers, one of them compromised",
+    intro:
+      "The Model Context Protocol (MCP) has become the default way to connect AI agents to external tools, files, and APIs. It is powerful and it is spreading fast, which is exactly why attackers are paying attention. A single malicious, spoofed, or over-permissioned MCP server can quietly exfiltrate data, inject instructions, or chain into actions the user never approved. For mobile teams shipping agentic features, every MCP connection is now part of your attack surface.",
+    sections: [
+      {
+        heading: "Why MCP changes the risk picture",
+        paragraphs: [
+          "MCP makes tools composable: an agent can discover a server, read its tool descriptions, and start calling it. That same flexibility means a poisoned tool description can carry hidden instructions, and a rogue server can impersonate a trusted one to harvest the data the agent sends it.",
+          "Because the agent acts with the user's authority, a compromised MCP connection does not just leak data, it can take actions, and on mobile those actions reach contacts, files, and payment flows.",
+        ],
+      },
+      {
+        heading: "Where MCP goes wrong in a mobile app",
+        paragraphs: [
+          "The failure modes are concrete and show up repeatedly when teams wire MCP into a client.",
+        ],
+        bullets: [
+          "MCP server URLs and auth tokens hardcoded or stored insecurely on-device",
+          "Tool descriptions trusted blindly, allowing tool-poisoning prompt injection",
+          "Over-broad scopes that let one server reach data meant for another",
+          "No verification that a server is the legitimate one the user expects",
+        ],
+      },
+      {
+        heading: "How RASMISER secures your MCP connections",
+        paragraphs: [
+          "RASMISER traces where your app stores MCP credentials, how it validates servers, and which tool calls run without a confirmation gate, mapping each finding to OWASP MASVS so your team knows exactly what to fix.",
+          "With runtime protection, the endpoints your agent talks to stay pinned and tamper-resistant, so a spoofed MCP server cannot quietly slot itself into your toolchain.",
+        ],
+      },
+    ],
+    takeaway:
+      "MCP is becoming core infrastructure for AI agents, and untrusted tool servers are a first-class threat. Treat every MCP connection like untrusted input: verify the server, scope the permissions, and scan where the tokens live.",
+  },
+  {
+    slug: "ai-voice-deepfakes-vishing-mobile-defense",
+    title: "AI Voice Deepfakes Make Vishing a Mobile-First Threat",
+    excerpt:
+      "Real-time voice cloning now powers phishing calls that sound exactly like your CEO. The phone in your pocket is the front line, and your app may be the target.",
+    category: "Cyber Threats",
+    author: "Sarah Chen",
+    role: "Head of Security Research",
+    date: "2026-06-18",
+    readingTime: "5 min read",
+    image: "/images/blog/ai-voice-deepfake.png",
+    imageAlt: "Illustration of a smartphone receiving a call with an AI voice waveform morphing into a fake face",
+    intro:
+      "Voice cloning that once needed minutes of audio now works on seconds of a public clip, in real time, over a phone call. Attackers are using AI-generated voices to impersonate executives, support agents, and family members, and the success rates are climbing. The attack lands on a mobile device, and increasingly the goal is to push a victim into an app: approve a transfer, reset a credential, paste a code.",
+    sections: [
+      {
+        heading: "Why deepfake voice raises the stakes for apps",
+        paragraphs: [
+          "Vishing used to rely on a convincing script. Now the voice itself is convincing, so the social-engineering barrier collapses and the attacker can improvise in a live call. The weak link becomes whatever the victim can be talked into doing in your app.",
+          "If a flow can be completed with a code read aloud or a single tap of approval, a cloned voice can drive it. Your app's confirmation design is now a security control.",
+        ],
+      },
+      {
+        heading: "Where the exposure lives in your build",
+        paragraphs: [
+          "Deepfake calls succeed by exploiting app flows that assume the human on the other end is who they claim to be.",
+        ],
+        bullets: [
+          "One-time codes and approvals that can be completed without re-authentication",
+          "Sensitive actions with no out-of-band or biometric confirmation step",
+          "Account recovery flows that trust a phone number or a spoken code alone",
+          "Push approvals that lack context about what is actually being authorized",
+        ],
+      },
+      {
+        heading: "How RASMISER hardens the targeted flows",
+        paragraphs: [
+          "RASMISER inspects how your app handles authentication, recovery, and high-value confirmations, flagging flows that can be completed without strong, contextual verification, each mapped to OWASP MASVS.",
+          "Combined with runtime protection, the credential and approval paths stay tamper-resistant, so a victim coerced by a cloned voice still hits a wall your app puts up.",
+        ],
+      },
+    ],
+    takeaway:
+      "When the voice on the call is fake but convincing, your app's confirmation steps are the last line of defense. Design sensitive actions to require strong, contextual verification, and scan the flows attackers will aim a deepfake at.",
+  },
+  {
+    slug: "shadow-ai-data-leakage-enterprise-apps",
+    title: "Shadow AI: The Data Leak Hiding in Your Employees' Apps",
+    excerpt:
+      "Staff are pasting source code, customer data, and secrets into unsanctioned AI tools every day. Shadow AI is the fastest-growing data-exfiltration channel of 2026.",
+    category: "App Security",
+    author: "Elena Rodriguez",
+    role: "VP of Engineering",
+    date: "2026-06-17",
+    readingTime: "5 min read",
+    image: "/images/blog/shadow-ai-leak.png",
+    imageAlt: "Illustration of corporate data flowing out of an office into unsanctioned AI chatbot apps",
+    intro:
+      "Surveys this year keep landing on the same uncomfortable number: a large majority of employees use AI tools their company never approved, and many paste in data they should not. Shadow AI, the unsanctioned use of chatbots and AI features, has quietly become one of the biggest data-leakage channels in the enterprise. The data walks out through an app on a personal or corporate phone, often with no logging at all.",
+    sections: [
+      {
+        heading: "Why shadow AI is so hard to see",
+        paragraphs: [
+          "Unlike a classic exfiltration attempt, shadow AI looks like normal productivity. An employee pastes a snippet to debug it or summarizes a document, and sensitive data leaves through a sanctioned-looking interface that security tooling never inspects.",
+          "On mobile especially, AI features are embedded everywhere, in keyboards, browsers, and assistants, so data can leave without the user even opening a dedicated chatbot.",
+        ],
+      },
+      {
+        heading: "What leaks, and how",
+        paragraphs: [
+          "The patterns are consistent across the builds and workflows we review.",
+        ],
+        bullets: [
+          "Source code, API keys, and config pasted into external AI tools for help",
+          "Customer records and internal documents sent to summarize or rewrite",
+          "AI-enabled keyboards and assistants with broad access to in-app content",
+          "No logging, DLP, or policy controls on AI feature usage inside apps",
+        ],
+      },
+      {
+        heading: "How RASMISER helps you regain visibility",
+        paragraphs: [
+          "RASMISER flags where your own app exposes data to third-party AI SDKs and assistants, where content leaves the client without controls, and where embedded AI features have more access than they need, mapped to OWASP MASVS.",
+          "With runtime protection in place, the data paths leaving your app stay monitored and locked down, so an embedded AI feature cannot become a silent exfiltration route.",
+        ],
+      },
+    ],
+    takeaway:
+      "Shadow AI is a leak that looks like productivity, which is exactly why it spreads. Inventory where your app hands data to AI features and put controls on those paths before the next paste becomes a breach.",
+  },
+  {
+    slug: "ai-data-poisoning-supply-chain-models",
+    title: "Data Poisoning: Corrupting AI Before It Ever Ships",
+    excerpt:
+      "Researchers showed that poisoning a tiny fraction of training data can backdoor a model. If your app bundles or fine-tunes a model, the attack starts upstream.",
+    category: "Cyber Threats",
+    author: "Sarah Chen",
+    role: "Head of Security Research",
+    date: "2026-06-17",
+    readingTime: "6 min read",
+    image: "/images/blog/ai-data-poisoning.png",
+    imageAlt: "Illustration of poisoned data droplets being injected into a clean AI training data stream",
+    intro:
+      "New research keeps lowering the bar for data poisoning: corrupting a surprisingly small slice of a model's training or fine-tuning data can plant a hidden backdoor that behaves normally until a specific trigger appears. As more mobile apps bundle on-device models or fine-tune on user data, the attack moves upstream into your AI supply chain, long before a single line of app code runs.",
+    sections: [
+      {
+        heading: "Why poisoning is a supply-chain problem",
+        paragraphs: [
+          "A poisoned model is not a code bug you can grep for. The malicious behavior is baked into the weights, dormant until a trigger input activates it, which makes it nearly invisible to traditional testing.",
+          "If you pull a pretrained model from a public hub, fine-tune on scraped data, or accept user contributions, you inherit whatever was hidden upstream, and you ship it inside your binary.",
+        ],
+      },
+      {
+        heading: "Where the risk reaches your app",
+        paragraphs: [
+          "The exposure concentrates around what you bundle and where your training data comes from.",
+        ],
+        bullets: [
+          "Pretrained model files pulled from unverified or unsigned sources",
+          "Fine-tuning on scraped or user-supplied data with no provenance",
+          "Bundled model weights shipped without integrity verification",
+          "No validation of model outputs before the app acts on them",
+        ],
+      },
+      {
+        heading: "How RASMISER inspects your AI supply chain",
+        paragraphs: [
+          "RASMISER inventories the model files and AI components compiled into your build, flags unsigned or unverified artifacts, and highlights where model output is trusted without validation, each mapped to OWASP MASVS.",
+          "Wired into CI, the scan turns model provenance and integrity into an automatic gate, so an unverified or tampered model file fails the build instead of shipping to users.",
+        ],
+      },
+    ],
+    takeaway:
+      "Data poisoning attacks your model before your code ever runs, so source-only security misses it entirely. Verify model provenance, check integrity at build time, and validate what the model produces before you trust it.",
+  },
+  {
     slug: "ai-worms-miasma-ironworm-target-coding-tools",
     title: "AI Worms Are Here: Miasma and IronWorm Target Your Dev Tools",
     excerpt:
