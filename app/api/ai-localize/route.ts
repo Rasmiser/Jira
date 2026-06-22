@@ -118,15 +118,21 @@ export async function POST(req: Request) {
         return
       }
 
-      const byKey = new Map(
-        (parsed?.segments ?? []).map((s) => [s.key, s]),
-      )
-      const merged: TranslationSegment[] = segments.map((s) => ({
-        key: s.key,
-        source: s.text,
-        translated: byKey.get(s.key)?.translated ?? "",
-        note: byKey.get(s.key)?.note ?? null,
-      }))
+      const parsedSegments = parsed?.segments ?? []
+
+      // The model may return keys with slightly different casing/format, so
+      // match by exact key first and fall back to positional order (the schema
+      // requires one entry per source segment, in the same order).
+      const byKey = new Map(parsedSegments.map((s) => [s.key, s]))
+      const merged: TranslationSegment[] = segments.map((s, i) => {
+        const match = byKey.get(s.key) ?? parsedSegments[i]
+        return {
+          key: s.key,
+          source: s.text,
+          translated: match?.translated ?? "",
+          note: match?.note ?? null,
+        }
+      })
 
       try {
         await db

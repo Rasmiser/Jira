@@ -15,6 +15,7 @@ import {
   UserCog,
   BadgeCheck,
   Server,
+  Languages,
   type LucideIcon,
 } from "lucide-react"
 
@@ -86,6 +87,16 @@ export const FEATURES: DashboardFeature[] = [
     plan: "free",
     href: "/dashboard/ai-checks",
     icon: BrainCircuit,
+    status: "new",
+  },
+  {
+    id: "localization",
+    name: "Translate & Adapt localized content",
+    description:
+      "Localize app store listings and in-app strings into any market with AI that adapts tone and idioms, not just literal translations.",
+    plan: "free",
+    href: "/dashboard/localization",
+    icon: Languages,
     status: "new",
   },
   {

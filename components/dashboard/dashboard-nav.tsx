@@ -14,6 +14,7 @@ import {
   ClipboardList,
   Inbox,
   LayoutGrid,
+  Languages,
 } from "lucide-react"
 import { SignOutButton } from "./sign-out-button"
 
@@ -24,6 +25,7 @@ const NAV = [
   { href: "/dashboard/testing", label: "Test suites", icon: FlaskConical },
   { href: "/dashboard/test-cases", label: "Test cases", icon: ClipboardList },
   { href: "/dashboard/protection", label: "Protection", icon: ShieldHalf },
+  { href: "/dashboard/localization", label: "Translate & Adapt", icon: Languages },
   { href: "/dashboard/threats", label: "Live threats", icon: Radar },
   { href: "/dashboard/leads", label: "Leads", icon: Inbox },
   { href: "/dashboard/billing", label: "Billing", icon: CreditCard },
