@@ -247,6 +247,42 @@ export const newsletterSubscribers = pgTable("newsletter_subscribers", {
   createdAt: timestamp("createdAt").notNull().defaultNow(),
 })
 
+// ---------------------------------------------------------------------------
+// Translate & Adapt — localize app store listings and in-app UI strings into
+// multiple locales with AI-assisted cultural adaptation. A project holds the
+// source content (segments); each target locale gets its own translation row.
+// ---------------------------------------------------------------------------
+export const localizationProjects = pgTable("localization_projects", {
+  id: text("id").primaryKey(),
+  userId: text("userId").notNull(),
+  name: text("name").notNull(),
+  contentType: text("contentType").notNull().default("store_listing"), // store_listing | ui_strings
+  platform: text("platform").notNull().default("android"), // android | ios | cross
+  sourceLocale: text("sourceLocale").notNull().default("en"),
+  // targetLocales: string[] of locale codes (e.g. ["es", "fr-CA"])
+  targetLocales: jsonb("targetLocales").notNull().default([]),
+  // segments: Array<{ key: string; text: string }>
+  segments: jsonb("segments").notNull().default([]),
+  tone: text("tone").notNull().default("neutral"), // neutral | friendly | professional | playful
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+})
+
+export const localizationTranslations = pgTable("localization_translations", {
+  id: text("id").primaryKey(),
+  projectId: text("projectId").notNull(),
+  userId: text("userId").notNull(),
+  locale: text("locale").notNull(),
+  localeName: text("localeName").notNull(),
+  status: text("status").notNull().default("draft"), // draft | translating | completed | error
+  // segments: Array<{ key: string; source: string; translated: string; note: string | null }>
+  segments: jsonb("segments").notNull().default([]),
+  adaptationNotes: text("adaptationNotes"),
+  qualityScore: integer("qualityScore"), // 0-100 self-assessed translation confidence
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+})
+
 export const subscriptions = pgTable("subscriptions", {
   id: text("id").primaryKey(),
   userId: text("userId").notNull().unique(),
