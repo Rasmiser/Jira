@@ -22,6 +22,187 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "llm-jailbreak-universal-transfers-2026",
+    title: "Universal LLM Jailbreaks Are Getting Faster and More Transferable",
+    excerpt:
+      "New research shows adversarial suffix attacks optimized on one model now transfer to closed-source frontier models in under an hour. Every embedded LLM is in scope.",
+    category: "Cyber Threats",
+    author: "Sarah Chen",
+    role: "Head of Security Research",
+    date: "2026-06-23",
+    readingTime: "6 min read",
+    image: "/images/blog/llm-jailbreak-exploit.png",
+    imageAlt: "Illustration of a cracked AI model lock with exploit code fragments leaking out",
+    intro:
+      "A new wave of research published this month demonstrates that universal adversarial suffix attacks, short token sequences appended to any prompt, can now bypass safety alignment on GPT-4o, Claude Opus 4, and Gemini Ultra with transfer rates researchers describe as 'alarmingly high.' What used to require direct model access to optimize against can now be pre-computed on open-weight models and replayed against closed-source ones. For every team that embeds an LLM in their app, the provider's safety layer just got measurably thinner.",
+    sections: [
+      {
+        heading: "Why transferability changes the threat model",
+        paragraphs: [
+          "Earlier jailbreak research required white-box access to a target model to run gradient descent on the adversarial suffix. Transferability breaks that constraint: an attacker optimizes against an open-weight model like Llama or Mistral and then fires the resulting suffix at a black-box API they cannot inspect.",
+          "The implications are significant for mobile apps. An attacker does not need to reverse-engineer your integration. They craft the payload offline and deliver it through any input your app passes to the model, a text field, a clipboard paste, a scanned document.",
+        ],
+      },
+      {
+        heading: "Where the exposure lands in your app",
+        paragraphs: [
+          "Transferable jailbreaks widen the blast radius of every input path your app hands to an LLM.",
+        ],
+        bullets: [
+          "User-supplied text, file uploads, and OCR results concatenated into prompts without sanitization",
+          "Deep-link parameters and push notification payloads feeding directly into model context",
+          "System prompts recoverable once guardrails are bypassed, leaking architecture and keys",
+          "Agent tool calls triggered by jailbroken output executing with the agent's full permissions",
+        ],
+      },
+      {
+        heading: "How RASMISER maps your jailbreak surface",
+        paragraphs: [
+          "RASMISER traces every path from untrusted input to LLM call in your binary, flagging where raw content reaches a model without isolation and where the response is acted on without validation, each finding mapped to OWASP MASVS LLM controls.",
+          "With runtime protection, the model endpoints your app calls stay pinned and tamper-resistant, so a jailbroken response cannot redirect data to an attacker-controlled channel.",
+        ],
+      },
+    ],
+    takeaway:
+      "Universal transferable jailbreaks mean the safety alignment your provider ships is not a wall, it is a speed bump. Treat every LLM input as adversarial, isolate untrusted content from prompts, and validate every response before your app acts on it.",
+  },
+  {
+    slug: "rag-poisoning-enterprise-knowledge-bases",
+    title: "RAG Poisoning: How Attackers Corrupt Your AI Knowledge Base",
+    excerpt:
+      "Injecting a handful of malicious documents into a RAG pipeline can silently redirect an AI assistant's answers for every user. Your vector database is now an attack surface.",
+    category: "Cyber Threats",
+    author: "Marcus Webb",
+    role: "Principal Security Engineer",
+    date: "2026-06-22",
+    readingTime: "6 min read",
+    image: "/images/blog/ai-rag-poisoning.png",
+    imageAlt: "Illustration of malicious documents being injected into a RAG vector database pipeline",
+    intro:
+      "Retrieval-Augmented Generation has become the default pattern for grounding LLM answers in real company data. It is also quietly becoming a high-value attack target. Security researchers this month demonstrated that inserting as few as five adversarially crafted documents into a corporate knowledge base is enough to reliably redirect an AI assistant's answers, exfiltrate retrieved context, or suppress correct information for targeted queries. The vector database your RAG pipeline reads from is now part of your threat model.",
+    sections: [
+      {
+        heading: "Why RAG poisoning is hard to detect",
+        paragraphs: [
+          "A poisoned RAG document does not exploit a code bug. It exploits the model's instruction-following. A malicious document can carry hidden instructions that the retriever surfaces at exactly the right query, and the LLM faithfully executes them because they look like authoritative context.",
+          "Unlike a classic database injection, there is no error, no anomalous query, and no obvious log entry. The assistant simply starts giving different answers to targeted questions, and attribution is nearly impossible without auditing retrieval traces.",
+        ],
+      },
+      {
+        heading: "The attack patterns researchers demonstrated",
+        paragraphs: [
+          "The published research catalogued three distinct poisoning strategies that teams should defend against now.",
+        ],
+        bullets: [
+          "Instruction injection: documents containing hidden directives that override system prompt behavior",
+          "Context hijacking: high-similarity documents that out-rank legitimate sources and replace correct answers",
+          "Exfiltration anchors: documents that cause the model to echo retrieved context to an attacker-controlled URL",
+          "Denial of retrieval: poisoned embeddings that suppress specific topics from appearing in results",
+        ],
+      },
+      {
+        heading: "How RASMISER helps secure RAG integrations",
+        paragraphs: [
+          "RASMISER audits how your app populates and queries RAG pipelines, flags where retrieved content flows unfiltered into prompts, and identifies retrieval paths that could expose sensitive context to injection, mapped to OWASP MASVS.",
+          "Combined with runtime monitoring, the retrieval and inference paths in your app stay observable, so anomalous retrieval patterns surface as alerts rather than silent mis-answers delivered to every user.",
+        ],
+      },
+    ],
+    takeaway:
+      "Your RAG pipeline is only as trustworthy as the documents inside it. Treat ingestion as a security boundary, validate retrieved content before it reaches a prompt, and monitor retrieval behavior for poisoning indicators.",
+  },
+  {
+    slug: "ai-agent-privilege-escalation-mobile",
+    title: "AI Agent Privilege Escalation: From Chat to Root in Three Steps",
+    excerpt:
+      "Researchers chained prompt injection with over-scoped tool permissions to escalate from a harmless chat query to full device access. Agentic apps need a least-privilege rethink.",
+    category: "Emerging Tech",
+    author: "Elena Rodriguez",
+    role: "VP of Engineering",
+    date: "2026-06-21",
+    readingTime: "7 min read",
+    image: "/images/blog/ai-agent-privilege-escalation.png",
+    imageAlt: "Illustration of an AI agent bypassing access control gates through privilege escalation",
+    intro:
+      "At this month's AI Security Summit, researchers from Trail of Bits published a three-step privilege escalation chain that starts with a single injected prompt in a mobile AI assistant and ends with arbitrary code execution on the host device. The chain works by exploiting the combination of over-scoped tool permissions, missing confirmation gates, and the agent's willingness to follow instructions embedded in retrieved content. It is not theoretical: the demo ran live on two shipping consumer apps.",
+    sections: [
+      {
+        heading: "How the three-step chain works",
+        paragraphs: [
+          "Step one is injection: the attacker embeds a malicious instruction in any content the agent retrieves, such as a webpage, a document, or a calendar event. Step two is tool abuse: the injected instruction directs the agent to call a tool with permissions broader than the task requires, such as a file-write tool invoked during a read-only summary task.",
+          "Step three is escalation: the over-scoped tool call plants a malicious payload, modifies a configuration, or invokes a system capability the user never intended to grant. On mobile, the gap between an AI feature and device-level access is often just one mis-scoped API permission.",
+        ],
+      },
+      {
+        heading: "The permission gaps that enable escalation",
+        paragraphs: [
+          "The research identified a consistent set of misconfigurations that make escalation chains viable.",
+        ],
+        bullets: [
+          "Agents granted persistent broad permissions rather than task-scoped, time-limited grants",
+          "No human-in-the-loop confirmation before irreversible or high-impact tool calls",
+          "Tool descriptions that do not restrict the contexts in which a tool may be invoked",
+          "Retrieved content passed directly to the agent without stripping embedded instructions",
+          "Missing sandboxing between agent tool execution and OS-level capabilities",
+        ],
+      },
+      {
+        heading: "How RASMISER audits agentic permission models",
+        paragraphs: [
+          "RASMISER inspects how your app scopes agent permissions, where confirmation gates are absent before sensitive tool calls, and which tool invocation paths can be triggered by untrusted retrieved content, with every finding mapped to OWASP MASVS.",
+          "With runtime protection active, agent tool calls to sensitive APIs are instrumented and tamper-resistant, so an injected instruction attempting to escalate hits a hard boundary rather than executing silently.",
+        ],
+      },
+    ],
+    takeaway:
+      "Agentic features that work with broad permissions are an escalation chain waiting to happen. Scope every tool grant to the minimum needed for the specific task, require confirmation before irreversible actions, and scan the full injection-to-execution path before you ship.",
+  },
+  {
+    slug: "multimodal-ai-visual-prompt-injection",
+    title: "Seeing Is Deceiving: Visual Prompt Injection in Multimodal AI",
+    excerpt:
+      "Attackers are hiding instructions inside images that multimodal models faithfully execute. A photo processed by your AI feature can now carry a hidden command.",
+    category: "Cyber Threats",
+    author: "Sarah Chen",
+    role: "Head of Security Research",
+    date: "2026-06-20",
+    readingTime: "5 min read",
+    image: "/images/blog/multimodal-ai-attack.png",
+    imageAlt: "Illustration of a multimodal AI model reading hidden instructions embedded in an image",
+    intro:
+      "Text-based prompt injection was already a serious problem. Multimodal models have opened a second channel: attackers are embedding instructions directly into images as low-opacity text, pixel-level perturbations, or steganographic payloads, and frontier models like GPT-4o and Gemini Pro Vision faithfully follow them. For mobile apps that let users upload photos, scan documents, or process camera frames through an AI feature, every image is now a potential delivery mechanism for adversarial instructions.",
+    sections: [
+      {
+        heading: "How visual injection bypasses text-level defenses",
+        paragraphs: [
+          "Input validation and content-filtering pipelines are almost universally built for text. An instruction hidden in an image as near-invisible overlay text or a steganographic payload passes every text-based filter and arrives at the model as trusted visual context.",
+          "Because multimodal models integrate visual and textual reasoning, an instruction in the image can override a system prompt, redirect tool calls, or instruct the model to suppress its response to the legitimate user query, all without any anomalous text in the request.",
+        ],
+      },
+      {
+        heading: "The attack surfaces unique to mobile",
+        paragraphs: [
+          "Mobile apps create several injection entry points that desktop applications rarely face.",
+        ],
+        bullets: [
+          "Camera feeds and photo library uploads processed by on-device or cloud vision models",
+          "Document scanning features that pass page images directly into a multimodal context",
+          "QR code and barcode readers whose decoded content feeds an LLM without sanitization",
+          "Screenshot and screen-sharing features that inadvertently capture attacker-controlled content",
+        ],
+      },
+      {
+        heading: "How RASMISER addresses the multimodal surface",
+        paragraphs: [
+          "RASMISER identifies where your app routes image, camera, and document inputs to multimodal model calls, flags pipelines that pass visual content to a model without content-type separation or output validation, and maps each risk to the relevant OWASP MASVS control.",
+          "With runtime protection, the image processing and model inference paths in your app stay monitored, so an anomalous model response triggered by a poisoned image surfaces as a detectable event rather than a silent data leak.",
+        ],
+      },
+    ],
+    takeaway:
+      "Multimodal models read instructions from images as readily as from text, and your input validation almost certainly is not checking for them. Treat every image your app passes to a model as potential adversarial input and validate the model's response before acting on it.",
+  },
+  {
     slug: "mcp-servers-new-attack-surface-ai-agents",
     title: "MCP Servers Are the New Attack Surface for AI Agents",
     excerpt:
