@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowLeft, Check, Minus } from "lucide-react"
+import { ArrowLeft, Check, Minus, Clock } from "lucide-react"
 import { SiteFooter } from "@/components/marketing/site-footer"
 
 export const metadata: Metadata = {
@@ -26,6 +26,93 @@ const rows: { feature: string; values: [Cell, Cell, Cell] }[] = [
   { feature: "Results in minutes", values: [true, "Hours", "Hours"] },
   { feature: "Built for indie & startup teams", values: [true, false, false] },
 ]
+
+type Priority = "critical" | "important" | "planned"
+
+interface RoadmapRow {
+  feature: string
+  description: string
+  priority: Priority
+  competitorHas: [boolean, boolean] // [Appknox, NowSecure]
+}
+
+const roadmapRows: RoadmapRow[] = [
+  {
+    feature: "SBOM generation (CycloneDX)",
+    description: "Binary software bill of materials for every release — including shadow APIs and third-party CVEs.",
+    priority: "critical",
+    competitorHas: [true, true],
+  },
+  {
+    feature: "Privacy data flow analysis",
+    description: "Maps exactly what user data is collected, where it goes, and flags GDPR / HIPAA / CCPA compliance gaps.",
+    priority: "critical",
+    competitorHas: [false, true],
+  },
+  {
+    feature: "IAST (Interactive Application Security Testing)",
+    description: "Correlates SAST and DAST findings with runtime observations to reduce false positives.",
+    priority: "critical",
+    competitorHas: [false, true],
+  },
+  {
+    feature: "Shadow API discovery",
+    description: "Automatically discovers all APIs inside the binary — including undocumented endpoints — and tests each one.",
+    priority: "critical",
+    competitorHas: [true, false],
+  },
+  {
+    feature: "OWASP MASVS / PCI DSS / GDPR compliance report export",
+    description: "Audit-ready, exportable compliance reports for regulated industry sales cycles.",
+    priority: "important",
+    competitorHas: [true, true],
+  },
+  {
+    feature: "CVSS scoring on all findings",
+    description: "Industry-standard severity scores on every finding so security teams can triage by risk, not gut feel.",
+    priority: "important",
+    competitorHas: [true, false],
+  },
+  {
+    feature: "Full CI/CD integrations (GitHub Actions, Jenkins, GitLab, Bitrise, Azure DevOps)",
+    description: "Native pipeline integrations beyond API tokens — pre-built step definitions for all major CI platforms.",
+    priority: "important",
+    competitorHas: [true, true],
+  },
+  {
+    feature: "AI SDK & library detection inside binaries",
+    description: "Identifies AI/ML frameworks and third-party AI services embedded in your binary.",
+    priority: "important",
+    competitorHas: [false, true],
+  },
+  {
+    feature: "App store monitoring (post-launch)",
+    description: "Monitors app stores for fake, cloned, or repackaged versions of your app after release.",
+    priority: "planned",
+    competitorHas: [true, false],
+  },
+  {
+    feature: "Manual penetration testing as a service (PTaaS)",
+    description: "Certified security researchers perform manual penetration testing — results within 3–5 business days.",
+    priority: "planned",
+    competitorHas: [true, true],
+  },
+]
+
+const PRIORITY_META: Record<Priority, { label: string; className: string }> = {
+  critical: {
+    label: "Critical",
+    className: "border-red-500/40 bg-red-500/10 text-red-600",
+  },
+  important: {
+    label: "Important",
+    className: "border-amber-500/40 bg-amber-500/10 text-amber-600",
+  },
+  planned: {
+    label: "Planned",
+    className: "border-blue-500/40 bg-blue-500/10 text-blue-600",
+  },
+}
 
 function CellValue({ value }: { value: Cell }) {
   if (value === true) {
@@ -125,6 +212,81 @@ export default function ComparePage() {
             Comparison based on publicly available information about Appknox and NowSecure as of {new Date().getFullYear()}.
             Product names are trademarks of their respective owners.
           </p>
+
+          {/* Roadmap gap table */}
+          <div className="mt-16">
+            <div className="mb-6 text-center">
+              <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Roadmap</p>
+              <h2 className="mt-2 text-balance text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                What&apos;s coming to RASMISER
+              </h2>
+              <p className="mx-auto mt-3 max-w-xl text-pretty text-base leading-relaxed text-slate-600">
+                We conducted a thorough competitive analysis. Here are the features we&apos;re building next, ranked by
+                enterprise impact.
+              </p>
+            </div>
+
+            <div className="overflow-x-auto rounded-2xl border border-slate-200">
+              <table className="w-full min-w-[640px] border-collapse text-left">
+                <thead>
+                  <tr className="border-b border-slate-200 bg-slate-50">
+                    <th scope="col" className="px-6 py-4 text-sm font-semibold text-slate-900">
+                      Feature
+                    </th>
+                    <th scope="col" className="px-6 py-4 text-center text-sm font-semibold text-slate-700">
+                      Appknox
+                    </th>
+                    <th scope="col" className="px-6 py-4 text-center text-sm font-semibold text-slate-700">
+                      NowSecure
+                    </th>
+                    <th scope="col" className="px-6 py-4 text-center text-sm font-semibold text-blue-700">
+                      RASMISER
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {roadmapRows.map((row, i) => {
+                    const meta = PRIORITY_META[row.priority]
+                    return (
+                      <tr key={row.feature} className={i % 2 === 1 ? "bg-slate-50/50" : ""}>
+                        <td className="px-6 py-4">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-sm font-medium text-slate-800">{row.feature}</span>
+                            <span
+                              className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${meta.className}`}
+                            >
+                              {meta.label}
+                            </span>
+                          </div>
+                          <p className="mt-1 text-xs leading-relaxed text-slate-500">{row.description}</p>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          {row.competitorHas[0] ? (
+                            <Check className="mx-auto h-5 w-5 text-emerald-600" aria-label="Yes" />
+                          ) : (
+                            <Minus className="mx-auto h-5 w-5 text-slate-300" aria-label="No" />
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          {row.competitorHas[1] ? (
+                            <Check className="mx-auto h-5 w-5 text-emerald-600" aria-label="Yes" />
+                          ) : (
+                            <Minus className="mx-auto h-5 w-5 text-slate-300" aria-label="No" />
+                          )}
+                        </td>
+                        <td className="bg-blue-50/40 px-6 py-4 text-center">
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-100 px-2.5 py-1 text-[11px] font-semibold text-blue-700">
+                            <Clock className="h-3 w-3" aria-hidden="true" />
+                            On roadmap
+                          </span>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
 
           <div className="mt-12 rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center">
             <h2 className="text-2xl font-bold text-slate-900">Try it before you talk to anyone</h2>
