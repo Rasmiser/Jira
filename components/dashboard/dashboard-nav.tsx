@@ -15,12 +15,14 @@ import {
   Inbox,
   LayoutGrid,
   Languages,
+  Map,
 } from "lucide-react"
 import { SignOutButton } from "./sign-out-button"
 
 const NAV = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/dashboard/features", label: "Features", icon: LayoutGrid },
+  { href: "/dashboard/roadmap", label: "Roadmap", icon: Map },
   { href: "/dashboard/scan/new", label: "New scan", icon: ScanLine },
   { href: "/dashboard/testing", label: "Test suites", icon: FlaskConical },
   { href: "/dashboard/test-cases", label: "Test cases", icon: ClipboardList },

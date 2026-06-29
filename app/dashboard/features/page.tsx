@@ -2,6 +2,7 @@ import { getUserId } from "@/lib/subscription"
 import { getOrCreateSubscription } from "@/lib/subscription"
 import { getPlan, type PlanId } from "@/lib/plans"
 import { FeatureHub } from "@/components/dashboard/feature-hub"
+import { RoadmapSection } from "@/components/dashboard/roadmap-section"
 
 export const metadata = {
   title: "Features | RASMISER",
@@ -27,6 +28,8 @@ export default async function FeaturesPage() {
       </div>
 
       <FeatureHub currentPlan={plan.id as PlanId} />
+
+      <RoadmapSection />
     </div>
   )
 }
