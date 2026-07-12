@@ -14,6 +14,7 @@ import { FAQ } from "@/components/marketing/faq"
 import { CtaSection } from "@/components/marketing/cta-section"
 import { NewsletterSection } from "@/components/marketing/newsletter-section"
 import { SiteFooter } from "@/components/marketing/site-footer"
+import { TrustBar } from "@/components/marketing/trust-bar"
 import { useSession } from "@/lib/auth-client"
 
 export default function Home() {
@@ -24,6 +25,7 @@ export default function Home() {
     <main className="min-h-screen bg-white">
       <SiteHeader />
       <Hero ctaHref={ctaHref} />
+      <TrustBar />
       <Features />
       <Services />
       <HowItWorks />
