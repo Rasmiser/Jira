@@ -24,9 +24,17 @@ export async function generateMetadata({
     keywords: [page.keyword],
     alternates: { canonical: `/solutions/${page.slug}` },
     openGraph: {
+      type: "website",
       title: page.metaTitle,
       description: page.metaDescription,
       url: `/solutions/${page.slug}`,
+      siteName: "RASMISER",
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: "@rasmiser",
+      title: page.metaTitle,
+      description: page.metaDescription,
     },
   }
 }
