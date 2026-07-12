@@ -22,6 +22,144 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "ai-generated-phishing-hyper-personalised-attacks-2026",
+    title: "AI-Generated Phishing: Why Every Employee Is Now a High-Value Target",
+    excerpt:
+      "LLMs can now write flawless, hyper-personalised phishing messages at industrial scale. The generic mass-phish is dead — what replaced it is far harder to spot and your app is the delivery mechanism.",
+    category: "Cyber Threats",
+    author: "Sarah Chen",
+    role: "Head of Security Research",
+    date: "2026-07-10",
+    readingTime: "7 min read",
+    image: "/images/blog/ai-phishing-attack.png",
+    imageAlt: "Illustration of an AI model generating personalised phishing messages targeting employees on mobile devices",
+    intro:
+      "For years, phishing detection relied on a simple heuristic: look for awkward language, generic greetings, and improbable scenarios. That heuristic is now useless. Research published this month shows that frontier LLMs, combined with publicly available OSINT data from LinkedIn, GitHub, and corporate websites, can produce personalised spear-phishing emails indistinguishable from genuine colleague communications — in bulk, in seconds, in any language. The average cost to generate a convincing, context-aware phishing campaign has dropped by over 95% since 2023. Every employee is now a high-value target, and your mobile app is frequently the final step the attacker is pushing the victim toward.",
+    sections: [
+      {
+        heading: "Why AI-generated phishing is categorically different",
+        paragraphs: [
+          "Traditional phishing works on volume. AI-generated spear-phishing works on precision. An LLM can ingest a target's recent GitHub commits, their LinkedIn job history, their company's public roadmap, and a leaked email thread, then produce a message that references real projects, real colleagues, and real deadlines. There is no generic greeting to flag and no improbable scenario to dismiss.",
+          "The same infrastructure that writes the message can generate a tailored lure: a fake security alert, a fabricated invoice, or a spoofed app-update prompt that looks exactly like the one your users trust. The message quality is no longer the weak link. The weak link is the action the message drives the victim toward inside an app.",
+        ],
+      },
+      {
+        heading: "How your app becomes the attack surface",
+        paragraphs: [
+          "Modern phishing campaigns rarely stop at credential theft. They push the victim into an action inside a legitimate-looking app, where the real damage is done.",
+        ],
+        bullets: [
+          "Deep-link abuse: crafted URLs open your app directly to a payment or approval screen, bypassing the browser warning layer",
+          "OAuth phishing: a fake authorisation prompt that looks identical to your app's sign-in captures tokens silently",
+          "Credential stuffing entry points: login flows with no rate limiting or anomaly detection absorb AI-generated credential lists",
+          "Push notification manipulation: forged notification payloads that mimic your app's visual identity drive in-app approvals",
+          "Session hijacking via insecure token storage: once the victim taps through, an insecurely stored session token is the attacker's actual prize",
+        ],
+      },
+      {
+        heading: "How RASMISER closes the gaps attackers exploit",
+        paragraphs: [
+          "RASMISER audits every entry point a phishing campaign is likely to target: deep-link handling, OAuth redirect validation, push notification processing, and authentication flows. Each finding is mapped to OWASP MASVS and comes with a concrete remediation step your developers can act on the same day.",
+          "With runtime protection enabled, deep links and external inputs are validated before they reach sensitive app flows, session tokens are stored in hardware-backed secure storage, and the authentication paths that phishing campaigns rely on stay tamper-resistant after launch. You cannot stop an attacker from sending the message, but you can make every action they are pushing the victim toward unreachable.",
+        ],
+      },
+    ],
+    takeaway:
+      "AI-generated phishing has eliminated the quality gap between a casual mass-email and a targeted executive attack. The defence is not better spam filters — it is hardening every in-app action an attacker might direct a victim toward, and scanning those flows before they ship.",
+  },
+  {
+    slug: "autonomous-ai-malware-adaptive-evasion-2026",
+    title: "Autonomous AI Malware: The Threat That Rewrites Itself to Escape Detection",
+    excerpt:
+      "A new class of AI-driven malware can observe its environment, modify its own payload, and wait for the ideal conditions to strike. Static signatures are no longer enough, and your app binary is a target.",
+    category: "Cyber Threats",
+    author: "Marcus Webb",
+    role: "Principal Security Engineer",
+    date: "2026-07-08",
+    readingTime: "8 min read",
+    image: "/images/blog/autonomous-ai-malware.png",
+    imageAlt: "Illustration of an AI malware strand mutating its code to bypass antivirus detection layers",
+    intro:
+      "Security researchers at Georgia Tech and ETH Zürich published findings this month on a new category of threat they are calling Autonomous Adaptive Malware (AAM): malicious payloads backed by small, on-device language models that can observe sandbox and AV behaviour, rewrite their own obfuscation strategy, and delay execution until detection conditions are unfavourable. In controlled experiments, AAM samples evaded five leading mobile AV engines with a success rate above 80%. For teams shipping mobile apps, this changes what it means to 'pass' a security scan — because the threat your scan sees today is not the threat your user runs tomorrow.",
+    sections: [
+      {
+        heading: "How adaptive malware outpaces signature-based detection",
+        paragraphs: [
+          "Traditional malware is static: once you have a signature, you catch it forever. AAM is not static. The embedded model monitors the execution environment — sandbox timings, API call patterns, the presence of debuggers — and decides, at runtime, whether to execute, wait, or mutate its payload to avoid the specific detection layer it is facing.",
+          "For mobile specifically, this means a malicious SDK or repackaged app can pass automated store review, lie dormant through the first week of usage monitoring, and activate only when it has confirmed it is running on a real device with real user data. The attack is designed around the review lifecycle, not despite it.",
+        ],
+      },
+      {
+        heading: "The vectors that bring adaptive malware into your ecosystem",
+        paragraphs: [
+          "Developers do not write malware into their own apps. The risk is what they pull in without knowing.",
+        ],
+        bullets: [
+          "Third-party SDKs from unverified sources with no integrity verification at install time",
+          "Repackaged versions of your own app distributed through unofficial stores containing injected payloads",
+          "Open-source dependencies with a poisoned release that slipped through maintainer review",
+          "Build toolchain compromise where the malicious payload is injected post-compilation",
+          "Malicious Gradle plugins or CocoaPods specs that execute during the build process",
+        ],
+      },
+      {
+        heading: "Why static scanning alone is insufficient — and what RASMISER adds",
+        paragraphs: [
+          "Because AAM can present as benign code until runtime conditions are met, scanning requires both deep static analysis and dynamic behavioural observation. RASMISER decompiles your binary to enumerate every third-party component, flag unsigned or unverified libraries, and identify code patterns consistent with environment-probing and conditional payload delivery — all mapped to OWASP MASVS.",
+          "Dynamic analysis exercises the running app in an instrumented environment, capturing runtime behaviour that dormant malware cannot suppress indefinitely. Every anomalous API call, unexpected network endpoint, and conditional execution branch is surfaced as a finding. Combined with runtime protection, the attack surface that adaptive malware exploits — unverified SDK calls, writable code regions, and debugger-detection bypasses — is hardened on-device, so even a payload that evades the scan hits a wall after deployment.",
+        ],
+      },
+    ],
+    takeaway:
+      "Adaptive AI malware is built to outlast the review cycle, not to beat it once. Your defence is layered: deep static analysis to catch the vector, dynamic analysis to observe the behaviour, and runtime protection to contain what neither catches. Scan the binary, not just the source.",
+  },
+  {
+    slug: "ai-sdk-supply-chain-attacks-mobile-2026",
+    title: "The AI SDK Supply Chain Attack: When Your Most-Trusted Package Becomes a Weapon",
+    excerpt:
+      "Attackers are now using AI to generate convincing, functional SDK forks with hidden backdoors. One malicious import can hand over every user token in your app. Here is how to defend your build pipeline.",
+    category: "App Security",
+    author: "Elena Rodriguez",
+    role: "VP of Engineering",
+    date: "2026-07-05",
+    readingTime: "7 min read",
+    image: "/images/blog/ai-sdk-supply-chain.png",
+    imageAlt: "Illustration of a corrupted SDK package being imported into a mobile app build pipeline",
+    intro:
+      "In May 2026, researchers at Socket Security documented a coordinated campaign in which attackers used LLMs to generate over 200 convincing forks of popular mobile SDKs — analytics, payments, authentication — complete with working documentation, plausible commit histories, and hidden data-exfiltration payloads. Packages were published to npm, PyPI, and Maven Central with names one character away from the legitimate libraries. The packages were downloaded a combined total of 340,000 times before detection. AI did not just assist the attack. AI was the attack: it automated the most time-consuming parts of a supply chain intrusion and made every one of those packages nearly indistinguishable from a legitimate library at a glance.",
+    sections: [
+      {
+        heading: "How AI supercharges the typosquatting playbook",
+        paragraphs: [
+          "Classic typosquatting was limited by the effort required to build a convincing fake: you needed working code, coherent documentation, and a plausible release history. LLMs eliminate all three constraints. An attacker can generate a complete, functional SDK fork, write its README, fabricate a plausible changelog, and seed it with a data-exfiltration payload in a single afternoon.",
+          "The result is a malicious package that passes every heuristic a busy developer uses to evaluate a dependency: it has stars, it has a changelog, it has documentation that reads like a human wrote it, and it compiles cleanly. The only reliable check is one developers almost never perform: verifying the package hash against the maintainer's signed release.",
+        ],
+      },
+      {
+        heading: "What a backdoored SDK can reach inside your app",
+        paragraphs: [
+          "The access a malicious SDK acquires depends on where in the call stack it sits. For the most commonly targeted library categories, the blast radius is wide.",
+        ],
+        bullets: [
+          "Authentication SDKs: full access to session tokens, OAuth credentials, and biometric confirmation results",
+          "Analytics SDKs: every screen, every tap, every form field value, often including passwords typed before submission",
+          "Payment SDKs: card numbers, device fingerprints, and transaction tokens passed through the library layer",
+          "Crash-reporting SDKs: stack traces that include memory addresses, variable values, and active session state",
+          "Push notification SDKs: device tokens that enable persistent targeting of individual users",
+        ],
+      },
+      {
+        heading: "How RASMISER protects your build pipeline",
+        paragraphs: [
+          "RASMISER inventories every third-party component compiled into your binary — including transitive dependencies that never appear in your direct manifest — and flags packages with mismatched hashes, unverified publishers, and code patterns consistent with exfiltration: unexpected network calls, reflection-based class loading, and obfuscated string decoding. Every finding is mapped to OWASP MASVS and scored by the data it can access.",
+          "Wired into your CI pipeline, the scan turns dependency integrity into an automatic gate: a package whose hash does not match the signed release fails the build before it reaches a device. Combined with runtime protection, the network paths that a backdoored SDK would use to phone home stay monitored and pinned, so an exfiltration attempt that slips through the build gate hits a hard wall at runtime. You cannot review every line of every dependency, but you can make it structurally impossible for an unverified one to leak your users' data.",
+        ],
+      },
+    ],
+    takeaway:
+      "AI has made supply chain attacks cheap, fast, and convincing. Dependency hygiene is no longer optional: verify package hashes at build time, monitor outbound network calls at runtime, and treat every third-party library as a potential attack vector. Scan the binary, not just the lockfile.",
+  },
+  {
     slug: "llm-jailbreak-universal-transfers-2026",
     title: "Universal LLM Jailbreaks Are Getting Faster and More Transferable",
     excerpt:

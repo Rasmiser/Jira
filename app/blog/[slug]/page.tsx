@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { SiteFooter } from "@/components/marketing/site-footer"
 import { blogPosts, getPostBySlug, formatDate } from "@/lib/blog"
+import { getSiteUrl } from "@/lib/site"
 
 export function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }))
@@ -17,9 +18,32 @@ export async function generateMetadata({
   const { slug } = await params
   const post = getPostBySlug(slug)
   if (!post) return { title: "Post not found | RASMISER" }
+  const siteUrl = getSiteUrl()
+  const canonicalUrl = `/blog/${slug}`
   return {
     title: `${post.title} | RASMISER Blog`,
     description: post.excerpt,
+    authors: [{ name: post.author }],
+    alternates: { canonical: canonicalUrl },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: post.excerpt,
+      url: canonicalUrl,
+      siteName: "RASMISER",
+      publishedTime: post.date,
+      authors: [post.author],
+      images: post.image
+        ? [{ url: `${siteUrl}${post.image}`, width: 1200, height: 630, alt: post.imageAlt }]
+        : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: "@rasmiser",
+      title: post.title,
+      description: post.excerpt,
+      images: post.image ? [`${siteUrl}${post.image}`] : [],
+    },
   }
 }
 
@@ -33,6 +57,30 @@ export default async function BlogPostPage({
   if (!post) notFound()
 
   const related = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 2)
+  const siteUrl = getSiteUrl()
+
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    image: post.image ? `${siteUrl}${post.image}` : undefined,
+    datePublished: post.date,
+    author: {
+      "@type": "Person",
+      name: post.author,
+      jobTitle: post.role,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "RASMISER",
+      url: siteUrl,
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${siteUrl}/blog/${slug}`,
+    },
+  }
 
   return (
     <main className="min-h-screen bg-white">
@@ -143,6 +191,10 @@ export default async function BlogPostPage({
       </section>
 
       <SiteFooter />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
     </main>
   )
 }
