@@ -1,126 +1,139 @@
 import {
-  FileSearch,
-  Bug,
-  PackageSearch,
+  ShieldCheck,
   KeyRound,
-  ClipboardCheck,
+  Network,
+  Lock,
+  Bug,
   GitBranch,
-  Server,
-  Layers,
-  BarChart3,
-  Headphones,
+  Smartphone,
+  FileText,
 } from "lucide-react"
 
-const services = [
+const securityFeatures = [
   {
-    icon: FileSearch,
-    title: "Static Analysis (SAST)",
-    description: "Decompile and inspect your binary for insecure storage, hardcoded secrets, and weak crypto.",
+    icon: ShieldCheck,
+    title: "OWASP MASVS Coverage",
+    description:
+      "Every finding mapped to the full MASVS v2 requirement set — STORAGE, CRYPTO, AUTH, NETWORK, PLATFORM, CODE, and RESILIENCE categories.",
     color: "text-blue-600",
-    bg: "bg-blue-100",
+    bg: "bg-blue-50",
   },
   {
     icon: Bug,
-    title: "Malware Detection",
-    description: "Flag malicious code, suspicious SDKs, and known-bad signatures bundled in your build.",
+    title: "Vulnerability Categories",
+    description:
+      "Hardcoded secrets, insecure storage, weak crypto, improper authentication, exposed components, and 290+ more checks per scan.",
     color: "text-rose-600",
-    bg: "bg-rose-100",
+    bg: "bg-rose-50",
   },
   {
-    icon: PackageSearch,
-    title: "APK / IPA Risk Analysis",
-    description: "Assess package integrity, exposed components, debug flags, and tampering exposure.",
+    icon: FileText,
+    title: "Scan Results & Reports",
+    description:
+      "Severity-ranked findings with CVSS scores, plain-English descriptions, real-world impact assessments, and a one-click PDF export.",
     color: "text-amber-600",
-    bg: "bg-amber-100",
+    bg: "bg-amber-50",
+  },
+  {
+    icon: Network,
+    title: "Network & TLS Analysis",
+    description:
+      "Detect missing certificate pinning, weak TLS configurations, cleartext traffic, and insecure WebView network access.",
+    color: "text-teal-600",
+    bg: "bg-teal-50",
+  },
+  {
+    icon: Lock,
+    title: "Enterprise Features",
+    description:
+      "SSO, team workspaces, audit logs, white-label PDF reports, API access, custom severity thresholds, and SIEM integrations.",
+    color: "text-indigo-600",
+    bg: "bg-indigo-50",
   },
   {
     icon: KeyRound,
-    title: "Permission & Privacy Abuse",
-    description: "Detect over-broad permissions and data flows that put user privacy at risk.",
+    title: "Permission & Privacy Audit",
+    description:
+      "Detect over-broad permissions, PII data flows, and privacy-invasive SDK behaviors that put user data — and compliance — at risk.",
     color: "text-emerald-600",
-    bg: "bg-emerald-100",
-  },
-  {
-    icon: ClipboardCheck,
-    title: "Compliance Mapping",
-    description: "Every finding mapped to OWASP MASVS, Mobile Top 10, CWE, and CVSS for clean audits.",
-    color: "text-teal-600",
-    bg: "bg-teal-100",
+    bg: "bg-emerald-50",
   },
   {
     icon: GitBranch,
     title: "CI/CD Security Gates",
-    description: "Automate scans on every release and fail the build when critical issues appear.",
-    color: "text-indigo-600",
-    bg: "bg-indigo-100",
+    description:
+      "Trigger scans from GitHub Actions, GitLab CI, or Bitbucket Pipelines and automatically fail the build on critical findings.",
+    color: "text-violet-600",
+    bg: "bg-violet-50",
+  },
+  {
+    icon: Smartphone,
+    title: "Android & iOS Support",
+    description:
+      "Full coverage for APK, AAB, and IPA builds — native Android, native iOS, React Native, Flutter, and Xamarin all supported.",
+    color: "text-orange-600",
+    bg: "bg-orange-50",
   },
 ]
 
-const highlights = [
-  {
-    icon: Server,
-    title: "Scan in minutes",
-    description: "Upload a build and get results fast",
-  },
-  {
-    icon: Layers,
-    title: "Android & iOS",
-    description: "Full coverage for native and cross-platform",
-  },
-  {
-    icon: BarChart3,
-    title: "Risk-scored reports",
-    description: "Severity-ranked findings with CVSS scores",
-  },
-  {
-    icon: Headphones,
-    title: "Guided remediation",
-    description: "Plain-English fixes on every finding",
-  },
+const complianceStandards = [
+  { name: "OWASP MASVS", description: "Mobile App Security Verification Standard" },
+  { name: "OWASP Top 10", description: "Most critical mobile risks" },
+  { name: "CWE", description: "Common Weakness Enumeration" },
+  { name: "CVSS v3.1", description: "Vulnerability Scoring System" },
+  { name: "GDPR", description: "Privacy & data protection" },
+  { name: "HIPAA", description: "Healthcare compliance" },
 ]
 
 export function Services() {
   return (
-    <section id="services" className="bg-white py-24">
+    <section id="security-features" className="bg-slate-50 py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Platform capabilities</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Security Features</p>
           <h2 className="mt-3 text-balance text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            A complete mobile app security platform
+            Complete mobile security coverage
           </h2>
           <p className="mt-4 text-pretty text-lg text-slate-600">
-            From static analysis to CI/CD enforcement, RASMISER covers the full mobile threat surface — every finding
-            scored, explained, and mapped to industry standards.
+            From static analysis to runtime protection, RASMISER covers every OWASP MASVS category — so your team
+            ships compliant, hardened apps with confidence.
           </p>
         </div>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((s) => (
+        <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {securityFeatures.map((f) => (
             <div
-              key={s.title}
-              className="rounded-xl border border-slate-200 bg-white p-6 text-center transition-shadow hover:shadow-lg hover:shadow-slate-900/5"
+              key={f.title}
+              className="rounded-xl border border-slate-200 bg-white p-6 transition-shadow hover:shadow-lg hover:shadow-slate-900/5"
             >
               <span
-                className={`mx-auto flex h-14 w-14 items-center justify-center rounded-full ${s.bg} ${s.color}`}
+                className={`flex h-12 w-12 items-center justify-center rounded-xl ${f.bg} ${f.color}`}
               >
-                <s.icon className="h-7 w-7" aria-hidden="true" />
+                <f.icon className="h-6 w-6" aria-hidden="true" />
               </span>
-              <h3 className="mt-5 text-lg font-semibold text-slate-900">{s.title}</h3>
-              <p className="mt-2 leading-relaxed text-slate-600">{s.description}</p>
+              <h3 className="mt-4 text-base font-semibold text-slate-900">{f.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">{f.description}</p>
             </div>
           ))}
         </div>
 
-        <div className="mt-12 rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-8">
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {highlights.map((h) => (
-              <div key={h.title} className="flex items-start gap-4">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600">
-                  <h.icon className="h-5 w-5" aria-hidden="true" />
+        {/* Compliance standards */}
+        <div className="mt-16">
+          <p className="text-center text-sm font-semibold uppercase tracking-wide text-slate-500">
+            Aligned to industry standards
+          </p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {complianceStandards.map((std) => (
+              <div
+                key={std.name}
+                className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white px-5 py-4"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+                  <ShieldCheck className="h-5 w-5" aria-hidden="true" />
                 </span>
                 <div>
-                  <h3 className="font-semibold text-slate-900">{h.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-slate-600">{h.description}</p>
+                  <p className="text-sm font-semibold text-slate-900">{std.name}</p>
+                  <p className="text-xs text-slate-500">{std.description}</p>
                 </div>
               </div>
             ))}
