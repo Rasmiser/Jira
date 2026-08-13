@@ -95,17 +95,17 @@ export function QuickAccessGrid({ currentPlan }: { currentPlan: PlanId }) {
             key={item.label}
             href={href}
             className={cn(
-              "group flex flex-col gap-3 border border-border bg-card px-4 py-4 transition-colors hover:bg-accent",
+              "signal-card group flex flex-col gap-3 px-4 py-4",
               !unlocked && "opacity-80",
             )}
           >
             <div className="flex items-center justify-between">
-              <div className="flex h-9 w-9 items-center justify-center border border-border bg-muted text-foreground">
+              <div className="signal-icon-box flex h-9 w-9 items-center justify-center">
                 <Icon className="h-4 w-4" aria-hidden="true" />
               </div>
               {unlocked ? (
                 <ArrowRight
-                  className="h-3.5 w-3.5 text-muted-foreground transition-colors group-hover:text-foreground"
+                  className="h-3.5 w-3.5 text-muted-foreground transition-colors group-hover:text-[oklch(0.78_0.15_195)]"
                   aria-hidden="true"
                 />
               ) : (

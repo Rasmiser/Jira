@@ -15,9 +15,15 @@ import { cn } from "@/lib/utils"
 export type ChartPoint = { label: string; value: number }
 
 const ACCENT_BG = {
-  sky: "bg-sky-600",
-  emerald: "bg-emerald-600",
-  ink: "bg-zinc-900 border border-zinc-800",
+  sky: "bg-gradient-to-b from-sky-500/20 to-transparent",
+  emerald: "bg-gradient-to-b from-emerald-500/20 to-transparent",
+  ink: "bg-gradient-to-b from-[oklch(0.78_0.15_195/0.16)] to-transparent",
+} as const
+
+const ACCENT_LINE = {
+  sky: "rgb(56 189 248)",
+  emerald: "rgb(52 211 153)",
+  ink: "rgb(103, 232, 249)",
 } as const
 
 export function ChartPreviewCard({
@@ -35,8 +41,10 @@ export function ChartPreviewCard({
   subtitle: string
   meta: string
 }) {
+  const lineColor = ACCENT_LINE[accent]
+
   return (
-    <div className="border border-border bg-card">
+    <div className="signal-card overflow-hidden">
       <div className={cn("h-44 px-4 pb-3 pt-4", ACCENT_BG[accent])}>
         <ResponsiveContainer width="100%" height="100%">
           {variant === "bar" ? (
@@ -45,14 +53,10 @@ export function ChartPreviewCard({
                 dataKey="label"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "rgba(255,255,255,0.85)", fontSize: 12 }}
+                tick={{ fill: "rgba(255,255,255,0.55)", fontSize: 12 }}
               />
               <YAxis hide domain={[0, "auto"]} />
-              <Bar
-                dataKey="value"
-                fill="rgba(255,255,255,0.85)"
-                radius={[2, 2, 0, 0]}
-              />
+              <Bar dataKey="value" fill={lineColor} radius={[2, 2, 0, 0]} />
             </BarChart>
           ) : (
             <LineChart data={data}>
@@ -60,16 +64,16 @@ export function ChartPreviewCard({
                 dataKey="label"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "rgba(255,255,255,0.85)", fontSize: 12 }}
+                tick={{ fill: "rgba(255,255,255,0.55)", fontSize: 12 }}
               />
               <YAxis hide domain={[0, "auto"]} />
               <Line
                 type="monotone"
                 dataKey="value"
-                stroke="rgba(255,255,255,0.9)"
+                stroke={lineColor}
                 strokeWidth={2}
-                dot={{ r: 3, fill: "white", strokeWidth: 0 }}
-                activeDot={false}
+                dot={{ r: 3, fill: lineColor, strokeWidth: 0 }}
+                activeDot={{ r: 4, fill: lineColor, strokeWidth: 0 }}
               />
             </LineChart>
           )}
@@ -78,7 +82,7 @@ export function ChartPreviewCard({
       <div className="px-5 py-5">
         <h3 className="font-medium text-foreground">{title}</h3>
         <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
-        <div className="mt-4 flex items-center gap-1.5 border-t border-border pt-3 text-xs text-muted-foreground">
+        <div className="signal-divider mt-4 flex items-center gap-1.5 border-t pt-3 text-xs text-muted-foreground">
           <Clock className="h-3.5 w-3.5" aria-hidden="true" />
           {meta}
         </div>

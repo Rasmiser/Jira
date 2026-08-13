@@ -17,7 +17,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex min-h-svh bg-background">
-      <aside className="hidden w-64 shrink-0 border-r border-border md:block">
+      <aside className="signal-sidebar hidden w-64 shrink-0 md:block">
         <div className="sticky top-0 h-svh">
           <DashboardNav
             userName={session.user.name}
@@ -26,7 +26,7 @@ export default async function DashboardLayout({
           />
         </div>
       </aside>
-      <main className="flex-1 min-w-0">{children}</main>
+      <main className="signal-main-bg relative flex-1 min-w-0">{children}</main>
     </div>
   )
 }
