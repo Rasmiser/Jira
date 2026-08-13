@@ -173,18 +173,37 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
   }
 
   return (
-    <main className="min-h-svh bg-background flex flex-col items-center justify-center px-4 noise-overlay">
+    <main className="relative min-h-svh signal-grid-bg flex flex-col items-center justify-center px-4 overflow-hidden">
+      <div
+        className="signal-glow-orb h-[420px] w-[420px] -top-40 -left-32 bg-[oklch(0.78_0.15_195/0.10)]"
+        aria-hidden="true"
+      />
+      <div
+        className="signal-glow-orb h-[380px] w-[380px] -bottom-32 -right-24 bg-[oklch(0.78_0.15_195/0.08)]"
+        aria-hidden="true"
+      />
+
       <Link
         href="/"
-        className="mb-10 flex items-center gap-2 text-foreground"
+        className="relative z-10 mb-8 flex items-center gap-2 text-foreground"
       >
-        <ShieldCheck className="h-5 w-5" aria-hidden="true" />
-        <span className="font-display text-2xl tracking-tight">RASMISER</span>
+        <ShieldCheck className="h-5 w-5 text-[oklch(0.78_0.15_195)]" aria-hidden="true" />
+        <span className="font-mono text-xl tracking-[0.2em]">RASMISER</span>
       </Link>
 
-      <div className="w-full max-w-sm border border-border bg-card p-8">
-        <div className="mb-8">
-          <h1 className="font-display text-3xl tracking-tight text-foreground text-balance">
+      <div className="signal-panel relative z-10 w-full max-w-sm p-8">
+        <div className="signal-scanline" aria-hidden="true" />
+        <span className="signal-corner top-3 left-3 border-l border-t" aria-hidden="true" />
+        <span className="signal-corner top-3 right-3 border-r border-t" aria-hidden="true" />
+        <span className="signal-corner bottom-3 left-3 border-l border-b" aria-hidden="true" />
+        <span className="signal-corner bottom-3 right-3 border-r border-b" aria-hidden="true" />
+
+        <div className="relative mb-8">
+          <div className="mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-[oklch(0.78_0.15_195)]">
+            <Fingerprint className="h-3.5 w-3.5" aria-hidden="true" />
+            Returning identity
+          </div>
+          <h1 className="signal-cursor font-display text-3xl tracking-tight text-foreground text-balance">
             Welcome back
           </h1>
           <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
@@ -192,9 +211,11 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="relative flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+              Email
+            </Label>
             <Input
               id="email"
               type="email"
@@ -203,10 +224,13 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
               required
               autoComplete="email"
               placeholder="you@company.com"
+              className="signal-input font-mono"
             />
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+              Password
+            </Label>
             <Input
               id="password"
               type="password"
@@ -216,6 +240,7 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
               minLength={8}
               autoComplete="current-password"
               placeholder="At least 8 characters"
+              className="signal-input font-mono"
             />
           </div>
 
@@ -225,16 +250,27 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
             </p>
           )}
 
-          <Button type="submit" disabled={loading} className="w-full mt-2">
-            {loading ? "Please wait..." : "Sign in"}
+          <Button
+            type="submit"
+            disabled={loading}
+            className="signal-btn w-full mt-2 font-mono uppercase tracking-widest"
+          >
+            {loading ? (
+              "Verifying..."
+            ) : (
+              <>
+                Sign in
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </>
+            )}
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-muted-foreground">
+        <p className="relative mt-6 text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{" "}
           <Link
             href="/sign-up"
-            className="text-foreground font-medium underline-offset-4 hover:underline"
+            className="text-[oklch(0.78_0.15_195)] font-medium underline-offset-4 hover:underline"
           >
             Sign up
           </Link>
