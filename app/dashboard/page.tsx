@@ -97,17 +97,21 @@ export default async function DashboardPage() {
       : ["Apr", "Jun", "Aug", "Oct", "Dec"].map((label) => ({ label, value: 0 }))
 
   return (
-    <div className="px-6 py-8 md:px-10">
+    <div className="relative px-6 py-8 md:px-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-4xl tracking-tight text-foreground">
+          <div className="mb-2 flex items-center gap-2 text-xs">
+            <span className="signal-pulse-dot" aria-hidden="true" />
+            <span className="signal-eyebrow">System online</span>
+          </div>
+          <h1 className="signal-heading-glow font-display text-4xl tracking-tight text-foreground">
             Dashboard
           </h1>
           <p className="mt-1 text-muted-foreground">
             Monitor your mobile app security posture.
           </p>
         </div>
-        <Button asChild>
+        <Button asChild className="signal-btn">
           <Link href="/dashboard/scan/new">
             <ScanLine className="h-4 w-4" aria-hidden="true" />
             New scan
@@ -206,7 +210,7 @@ export default async function DashboardPage() {
 
       {/* Quick access */}
       <div className="mt-10">
-        <h2 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
+        <h2 className="font-mono text-sm font-medium uppercase tracking-wider text-[oklch(0.78_0.15_195)]">
           Quick access
         </h2>
         <div className="mt-4">
@@ -217,12 +221,12 @@ export default async function DashboardPage() {
       {/* Connected services */}
       <div className="mt-10">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
+          <h2 className="font-mono text-sm font-medium uppercase tracking-wider text-[oklch(0.78_0.15_195)]">
             Connected services
           </h2>
           <Link
             href="/dashboard/integrations"
-            className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-[oklch(0.78_0.15_195)]"
           >
             Manage
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -239,12 +243,12 @@ export default async function DashboardPage() {
       {/* Runtime protection */}
       <div className="mt-10">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
+          <h2 className="font-mono text-sm font-medium uppercase tracking-wider text-[oklch(0.78_0.15_195)]">
             Runtime protection
           </h2>
           <Link
             href="/dashboard/protection"
-            className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-[oklch(0.78_0.15_195)]"
           >
             Manage
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -252,7 +256,7 @@ export default async function DashboardPage() {
         </div>
 
         {protectedApps.length === 0 ? (
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border border-dashed border-border px-5 py-4">
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border border-dashed border-[oklch(0.78_0.15_195/0.3)] bg-[oklch(0.78_0.15_195/0.04)] px-5 py-4">
             <p className="text-sm text-muted-foreground">
               Go beyond scanning — apply no-code runtime protection to block live
               attacks on shipped apps.
@@ -262,14 +266,14 @@ export default async function DashboardPage() {
             </Button>
           </div>
         ) : (
-          <div className="mt-4 divide-y divide-border border border-border">
+          <div className="signal-card mt-4 divide-y divide-[oklch(0.78_0.15_195/0.16)]">
             {protectedApps.slice(0, 3).map((app) => (
               <Link
                 key={app.id}
                 href={`/dashboard/protection/${app.id}`}
-                className="flex items-center gap-4 px-5 py-3 transition-colors hover:bg-accent"
+                className="flex items-center gap-4 px-5 py-3 transition-colors hover:bg-[oklch(0.78_0.15_195/0.06)]"
               >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-border bg-muted text-muted-foreground">
+                <div className="signal-icon-box flex h-9 w-9 shrink-0 items-center justify-center">
                   {app.platform === "ios" ? (
                     <Apple className="h-4 w-4" aria-hidden="true" />
                   ) : (
@@ -294,13 +298,13 @@ export default async function DashboardPage() {
       {/* Recent scans */}
       <div className="mt-10">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
+          <h2 className="font-mono text-sm font-medium uppercase tracking-wider text-[oklch(0.78_0.15_195)]">
             Recent scans
           </h2>
           {scans.length >= 2 && (
             <Link
               href="/dashboard/compare"
-              className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-[oklch(0.78_0.15_195)]"
             >
               <GitCompareArrows className="h-3.5 w-3.5" aria-hidden="true" />
               Compare versions
@@ -309,9 +313,9 @@ export default async function DashboardPage() {
         </div>
 
         {scans.length === 0 ? (
-          <div className="mt-4 flex flex-col items-center justify-center border border-dashed border-border px-6 py-16 text-center">
+          <div className="signal-card mt-4 flex flex-col items-center justify-center border-dashed px-6 py-16 text-center">
             <ShieldCheck
-              className="h-10 w-10 text-muted-foreground"
+              className="h-10 w-10 text-[oklch(0.78_0.15_195)]"
               aria-hidden="true"
             />
             <h3 className="mt-4 font-display text-2xl tracking-tight text-foreground">
@@ -321,19 +325,19 @@ export default async function DashboardPage() {
               Upload your first APK or IPA to get a full security report in
               minutes.
             </p>
-            <Button asChild className="mt-6">
+            <Button asChild className="signal-btn mt-6">
               <Link href="/dashboard/scan/new">Run your first scan</Link>
             </Button>
           </div>
         ) : (
-          <div className="mt-4 divide-y divide-border border border-border">
+          <div className="signal-card mt-4 divide-y divide-[oklch(0.78_0.15_195/0.16)]">
             {scans.map((scan) => (
               <Link
                 key={scan.id}
                 href={`/dashboard/scans/${scan.id}`}
-                className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-accent"
+                className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-[oklch(0.78_0.15_195/0.06)]"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-border bg-muted text-muted-foreground">
+                <div className="signal-icon-box flex h-10 w-10 shrink-0 items-center justify-center">
                   {scan.platform === "ios" ? (
                     <Apple className="h-5 w-5" aria-hidden="true" />
                   ) : (

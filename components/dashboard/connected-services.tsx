@@ -40,9 +40,9 @@ export function ConnectedServices({
         <Link
           key={service.name}
           href={service.href}
-          className="flex items-center gap-4 border border-border bg-card px-5 py-4 transition-colors hover:bg-accent"
+          className="signal-card flex items-center gap-4 px-5 py-4"
         >
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-border bg-muted text-foreground">
+          <div className="signal-icon-box flex h-11 w-11 shrink-0 items-center justify-center">
             <service.icon className="h-5 w-5" aria-hidden="true" />
           </div>
           <div className="min-w-0 flex-1">

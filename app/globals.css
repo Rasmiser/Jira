@@ -302,4 +302,126 @@
   .signal-btn:hover:not(:disabled) {
     box-shadow: 0 0 36px oklch(0.78 0.15 195 / 0.55);
   }
+
+  /* Futuristic dashboard treatment */
+  .signal-sidebar {
+    position: relative;
+    background-color: oklch(0.045 0.01 260);
+    background-image:
+      linear-gradient(oklch(0.78 0.15 195 / 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.78 0.15 195 / 0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+    border-right: 1px solid oklch(0.78 0.15 195 / 0.18);
+  }
+
+  .signal-sidebar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -1px;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      oklch(0.78 0.15 195 / 0.5) 20%,
+      oklch(0.78 0.15 195 / 0.5) 80%,
+      transparent
+    );
+    box-shadow: 0 0 12px oklch(0.78 0.15 195 / 0.5);
+  }
+
+  .signal-nav-item {
+    position: relative;
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+  }
+
+  .signal-nav-item.active {
+    color: oklch(0.94 0.02 195);
+    background: oklch(0.78 0.15 195 / 0.1);
+  }
+
+  .signal-nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 60%;
+    background: oklch(0.78 0.15 195);
+    box-shadow: 0 0 8px oklch(0.78 0.15 195 / 0.8);
+  }
+
+  .signal-nav-item:hover:not(.active) {
+    background: oklch(0.78 0.15 195 / 0.06);
+    color: oklch(0.9 0.02 195);
+  }
+
+  .signal-main-bg {
+    background-color: oklch(0.055 0.01 260);
+    background-image: radial-gradient(
+      circle at 15% 0%,
+      oklch(0.78 0.15 195 / 0.07),
+      transparent 45%
+    );
+  }
+
+  .signal-card {
+    position: relative;
+    background: oklch(0.08 0.01 260 / 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid oklch(0.78 0.15 195 / 0.16);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .signal-card:hover {
+    border-color: oklch(0.78 0.15 195 / 0.4);
+    box-shadow: 0 0 32px oklch(0.78 0.15 195 / 0.1);
+  }
+
+  .signal-icon-box {
+    background: oklch(0.78 0.15 195 / 0.12);
+    border: 1px solid oklch(0.78 0.15 195 / 0.35);
+    color: oklch(0.78 0.15 195);
+    box-shadow: 0 0 16px oklch(0.78 0.15 195 / 0.2);
+  }
+
+  .signal-heading-glow {
+    text-shadow: 0 0 24px oklch(0.78 0.15 195 / 0.35);
+  }
+
+  .signal-divider {
+    border-color: oklch(0.78 0.15 195 / 0.16) !important;
+  }
+
+  .signal-eyebrow {
+    font-family: var(--font-mono);
+    letter-spacing: 0.3em;
+    color: oklch(0.78 0.15 195);
+  }
+
+  .signal-pulse-dot {
+    position: relative;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: oklch(0.78 0.15 195);
+    box-shadow: 0 0 8px oklch(0.78 0.15 195 / 0.8);
+  }
+
+  .signal-pulse-dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 9999px;
+    border: 1px solid oklch(0.78 0.15 195 / 0.6);
+    animation: signal-ping 1.8s ease-out infinite;
+  }
+
+  @keyframes signal-ping {
+    0% { transform: scale(0.6); opacity: 0.8; }
+    100% { transform: scale(1.8); opacity: 0; }
+  }
 }
