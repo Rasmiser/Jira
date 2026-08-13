@@ -1,16 +1,27 @@
 import Link from "next/link"
+import { format } from "date-fns"
 import { getScans } from "@/app/actions/scans"
-import { getProtectedApps, getThreatStats } from "@/app/actions/protection"
+import {
+  getProtectedApps,
+  getThreatStats,
+  getThreatEvents,
+} from "@/app/actions/protection"
 import { getUserId, getUsage } from "@/lib/subscription"
+import { isJiraConfigured } from "@/lib/jira"
+import { isStripeConfigured } from "@/lib/stripe"
 import { Button } from "@/components/ui/button"
 import { SeverityBadge, gradeColor } from "@/components/dashboard/severity-badge"
 import { RiskBadge } from "@/components/dashboard/status-badges"
+import { StatCard } from "@/components/dashboard/stat-card"
+import { ChartPreviewCard, type ChartPoint } from "@/components/dashboard/chart-preview-card"
+import { QuickAccessGrid } from "@/components/dashboard/quick-access-grid"
+import { ConnectedServices } from "@/components/dashboard/connected-services"
 import { cn } from "@/lib/utils"
 import {
   ScanLine,
   ShieldAlert,
   ShieldCheck,
-  ShieldHalf,
+  FileSearch,
   Radar,
   ArrowRight,
   Smartphone,
@@ -32,12 +43,14 @@ function formatDate(d: Date | string) {
 
 export default async function DashboardPage() {
   const userId = await getUserId()
-  const [scans, usage, protectedApps, threatStats] = await Promise.all([
-    getScans(),
-    getUsage(userId),
-    getProtectedApps(),
-    getThreatStats(),
-  ])
+  const [scans, usage, protectedApps, threatStats, recentThreatEvents] =
+    await Promise.all([
+      getScans(),
+      getUsage(userId),
+      getProtectedApps(),
+      getThreatStats(),
+      getThreatEvents({ limit: 60 }),
+    ])
 
   const totalFindings = scans.reduce(
     (sum, s) => sum + s.criticalCount + s.highCount + s.mediumCount + s.lowCount,
@@ -45,13 +58,50 @@ export default async function DashboardPage() {
   )
   const criticalTotal = scans.reduce((sum, s) => sum + s.criticalCount, 0)
   const totalBlocked = protectedApps.reduce((s, a) => s + a.attacksBlocked, 0)
+  const jiraConfigured = isJiraConfigured()
+  const stripeConfigured = isStripeConfigured()
+
+  // --- Chart data --------------------------------------------------------
+  const recentScansAsc = [...scans]
+    .slice(0, 7)
+    .reverse()
+
+  const findingsChart: ChartPoint[] =
+    recentScansAsc.length > 0
+      ? recentScansAsc.map((s) => ({
+          label: format(new Date(s.createdAt), "EEEEE"),
+          value: s.criticalCount + s.highCount + s.mediumCount + s.lowCount,
+        }))
+      : ["M", "T", "W", "T", "F", "S", "S"].map((label) => ({ label, value: 0 }))
+
+  const riskChart: ChartPoint[] =
+    recentScansAsc.length > 0
+      ? recentScansAsc.map((s) => ({
+          label: format(new Date(s.createdAt), "MMM"),
+          value: s.riskScore ?? 0,
+        }))
+      : ["Apr", "Jun", "Aug", "Oct", "Dec"].map((label) => ({ label, value: 0 }))
+
+  const threatsByDay = new Map<string, number>()
+  for (const event of recentThreatEvents) {
+    const key = format(new Date(event.createdAt), "MMM")
+    threatsByDay.set(
+      key,
+      (threatsByDay.get(key) ?? 0) +
+        (event.action === "blocked" || event.action === "terminated" ? 1 : 0),
+    )
+  }
+  const threatsChart: ChartPoint[] =
+    threatsByDay.size > 0
+      ? Array.from(threatsByDay.entries()).map(([label, value]) => ({ label, value }))
+      : ["Apr", "Jun", "Aug", "Oct", "Dec"].map((label) => ({ label, value: 0 }))
 
   return (
     <div className="px-6 py-8 md:px-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="font-display text-4xl tracking-tight text-foreground">
-            Overview
+            Dashboard
           </h1>
           <p className="mt-1 text-muted-foreground">
             Monitor your mobile app security posture.
@@ -65,28 +115,40 @@ export default async function DashboardPage() {
         </Button>
       </div>
 
-      {/* Stats */}
-      <div className="mt-8 grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
-        <Stat
+      {/* Stat cards */}
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          icon={ScanLine}
+          color="ink"
           label="Scans this month"
-          value={
-            usage.limit === null
-              ? `${usage.used}`
-              : `${usage.used} / ${usage.limit}`
-          }
-          sub={`${usage.plan.name} plan`}
+          value={usage.limit === null ? `${usage.used}` : `${usage.used} / ${usage.limit}`}
+          trendValue={usage.plan.name}
+          trendLabel="plan"
         />
-        <Stat label="Total scans" value={`${scans.length}`} sub="all time" />
-        <Stat
+        <StatCard
+          icon={FileSearch}
+          color="sky"
           label="Total findings"
           value={`${totalFindings}`}
-          sub="across all scans"
+          trendValue={`${criticalTotal}`}
+          trendLabel="critical need attention"
+          trendTone={criticalTotal > 0 ? "neutral" : "positive"}
         />
-        <Stat
-          label="Critical issues"
-          value={`${criticalTotal}`}
-          sub="need attention"
-          danger={criticalTotal > 0}
+        <StatCard
+          icon={ShieldCheck}
+          color="emerald"
+          label="Attacks blocked"
+          value={formatNumber(totalBlocked)}
+          trendValue={`${protectedApps.length}`}
+          trendLabel="protected apps"
+        />
+        <StatCard
+          icon={Radar}
+          color="rose"
+          label="Threats (24h)"
+          value={formatNumber(threatStats.last24h)}
+          trendValue="Live"
+          trendLabel="monitoring active"
         />
       </div>
 
@@ -106,6 +168,74 @@ export default async function DashboardPage() {
         </div>
       )}
 
+      {/* Chart previews */}
+      <div className="mt-10 grid gap-4 lg:grid-cols-3">
+        <ChartPreviewCard
+          variant="bar"
+          accent="sky"
+          data={findingsChart}
+          title="Scan Findings"
+          subtitle="Findings per recent scan"
+          meta={
+            scans[0]
+              ? `last scan ${formatDate(scans[0].createdAt)}`
+              : "no scans yet"
+          }
+        />
+        <ChartPreviewCard
+          variant="line"
+          accent="emerald"
+          data={riskChart}
+          title="Risk Score"
+          subtitle="Security score over recent scans"
+          meta={scans.length > 0 ? `${scans.length} scans tracked` : "no scans yet"}
+        />
+        <ChartPreviewCard
+          variant="line"
+          accent="ink"
+          data={threatsChart}
+          title="Attacks Blocked"
+          subtitle="Runtime threats stopped over time"
+          meta={
+            threatStats.totalEvents > 0
+              ? `${formatNumber(threatStats.blocked)} blocked total`
+              : "no activity yet"
+          }
+        />
+      </div>
+
+      {/* Quick access */}
+      <div className="mt-10">
+        <h2 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
+          Quick access
+        </h2>
+        <div className="mt-4">
+          <QuickAccessGrid currentPlan={usage.plan.id} />
+        </div>
+      </div>
+
+      {/* Connected services */}
+      <div className="mt-10">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
+            Connected services
+          </h2>
+          <Link
+            href="/dashboard/integrations"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Manage
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
+        </div>
+        <div className="mt-4">
+          <ConnectedServices
+            jiraConfigured={jiraConfigured}
+            stripeConfigured={stripeConfigured}
+          />
+        </div>
+      </div>
+
       {/* Runtime protection */}
       <div className="mt-10">
         <div className="flex items-center justify-between">
@@ -118,44 +248,6 @@ export default async function DashboardPage() {
           >
             Manage
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-          </Link>
-        </div>
-
-        <div className="mt-4 grid gap-4 lg:grid-cols-3">
-          <Link
-            href="/dashboard/protection"
-            className="border border-border bg-card px-5 py-5 transition-colors hover:bg-accent"
-          >
-            <ShieldHalf className="h-5 w-5 text-foreground" aria-hidden="true" />
-            <p className="mt-3 font-display text-3xl tracking-tight text-foreground">
-              {protectedApps.length}
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">Protected apps</p>
-          </Link>
-          <Link
-            href="/dashboard/threats"
-            className="border border-border bg-card px-5 py-5 transition-colors hover:bg-accent"
-          >
-            <ShieldCheck
-              className="h-5 w-5 text-emerald-400"
-              aria-hidden="true"
-            />
-            <p className="mt-3 font-display text-3xl tracking-tight text-foreground">
-              {formatNumber(totalBlocked)}
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">Attacks blocked</p>
-          </Link>
-          <Link
-            href="/dashboard/threats"
-            className="border border-border bg-card px-5 py-5 transition-colors hover:bg-accent"
-          >
-            <Radar className="h-5 w-5 text-foreground" aria-hidden="true" />
-            <p className="mt-3 font-display text-3xl tracking-tight text-foreground">
-              {formatNumber(threatStats.last24h)}
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Threat events (24h)
-            </p>
           </Link>
         </div>
 
@@ -286,35 +378,6 @@ export default async function DashboardPage() {
           </div>
         )}
       </div>
-    </div>
-  )
-}
-
-function Stat({
-  label,
-  value,
-  sub,
-  danger,
-}: {
-  label: string
-  value: string
-  sub: string
-  danger?: boolean
-}) {
-  return (
-    <div className="bg-card px-5 py-5">
-      <p className="text-xs uppercase tracking-wider text-muted-foreground">
-        {label}
-      </p>
-      <p
-        className={cn(
-          "mt-2 font-display text-3xl tracking-tight",
-          danger ? "text-red-400" : "text-foreground",
-        )}
-      >
-        {value}
-      </p>
-      <p className="mt-1 text-xs text-muted-foreground">{sub}</p>
     </div>
   )
 }
