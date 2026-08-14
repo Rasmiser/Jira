@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { getSession, getOrCreateSubscription } from "@/lib/subscription"
 import { getPlan } from "@/lib/plans"
 import { DashboardNav } from "@/components/dashboard/dashboard-nav"
+import { AiAssistantWidget } from "@/components/dashboard/ai-assistant-widget"
 
 export default async function DashboardLayout({
   children,
@@ -27,6 +28,7 @@ export default async function DashboardLayout({
         </div>
       </aside>
       <main className="signal-main-bg relative flex-1 min-w-0">{children}</main>
+      <AiAssistantWidget />
     </div>
   )
 }
