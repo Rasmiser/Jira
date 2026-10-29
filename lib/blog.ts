@@ -22,6 +22,133 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "frontier-ai-model-security-updates-2026",
+    title: "Frontier AI Model Security: The 2026 Updates Teams Need to Know",
+    excerpt:
+      "The latest frontier models are more capable, more connected, and harder to evaluate with yesterday's checklists. Here are the security updates that should change how mobile teams ship AI features.",
+    category: "AI Security",
+    author: "Sarah Chen",
+    role: "Head of Security Research",
+    date: "2026-10-29",
+    readingTime: "6 min read",
+    image: "/images/blog/ai-frontier-model-security.png",
+    imageAlt: "Layered frontier AI model shapes behind a secure mobile device",
+    intro:
+      "AI capabilities have moved quickly from isolated chat experiences into mobile products that can read documents, call tools, and make decisions. The security conversation has moved with them. In the latest model releases, stronger reasoning and longer context windows are useful for product teams, but they also increase the blast radius of a compromised prompt, retrieved document, or tool connection.",
+    sections: [
+      {
+        heading: "What changed in the latest models",
+        paragraphs: [
+          "Longer context, multimodal input, and more reliable tool use make AI features more useful while creating more places for untrusted content to influence behaviour. A screenshot, attachment, or web result can now travel much further through an application before a human sees the output.",
+          "The important update is not a single new vulnerability. It is the shift from a model that only generates text to a model that participates in a workflow with permissions, data, and side effects.",
+        ],
+      },
+      {
+        heading: "The checks to add before release",
+        paragraphs: ["Treat every model boundary as an input boundary and test the complete path, not just the prompt."],
+        bullets: [
+          "Enforce structured output validation before model responses reach sensitive app flows",
+          "Keep tool permissions scoped to the minimum action and data each feature needs",
+          "Red-team multimodal inputs, retrieved content, and long-context instruction collisions",
+          "Log model, prompt-template, tool, and policy versions for incident investigation",
+          "Add a human confirmation step before payments, account changes, or destructive actions",
+        ],
+      },
+      {
+        heading: "How RASMISER helps teams ship safely",
+        paragraphs: [
+          "RASMISER maps AI-powered mobile flows from untrusted input to privileged action, checks the surrounding authentication and storage controls, and surfaces risky paths before release. That gives teams a security view of the feature as it actually runs, rather than a checklist limited to the model endpoint.",
+        ],
+      },
+    ],
+    takeaway:
+      "The latest AI update is a product architecture update: models now sit inside workflows with real permissions. Secure the workflow around the model, validate every handoff, and test the actions an attacker can make the model take.",
+  },
+  {
+    slug: "ai-agent-security-best-practices-2026",
+    title: "AI Agents Are Shipping Faster: Five Security Controls That Cannot Wait",
+    excerpt:
+      "Agentic features are moving from demos into production apps. Before an agent can act for a user, teams need clear permission boundaries, traceability, and a safe failure mode.",
+    category: "AI Security",
+    author: "Marcus Webb",
+    role: "Principal Security Engineer",
+    date: "2026-10-22",
+    readingTime: "5 min read",
+    image: "/images/blog/ai-agent-security-update.png",
+    imageAlt: "Connected AI agent nodes navigating a secure mobile app workflow",
+    intro:
+      "The newest wave of AI product updates is focused on agents: systems that plan, call tools, and complete multi-step tasks. That can remove friction for users, but it also means a prompt injection is no longer limited to a bad answer. If the agent has access to a tool, the same injection can become an unwanted action.",
+    sections: [
+      {
+        heading: "Agents change the threat model",
+        paragraphs: [
+          "A conventional AI feature returns a response. An agent can select a tool, pass arguments, read the result, and continue. Each step creates another trust boundary, especially when the agent handles email, files, support records, or account settings.",
+        ],
+      },
+      {
+        heading: "Five controls for production agents",
+        paragraphs: ["These controls keep useful autonomy from turning into unreviewed authority."],
+        bullets: [
+          "Use explicit, per-tool allowlists instead of broad access to backend capabilities",
+          "Validate arguments server-side and bind every action to the signed-in user's scope",
+          "Separate planning from execution so high-impact actions require confirmation",
+          "Set budgets for steps, tokens, tool calls, and time to limit runaway behaviour",
+          "Keep an immutable trace of decisions and tool results for audit and replay",
+        ],
+      },
+      {
+        heading: "Build for safe failure",
+        paragraphs: [
+          "When an agent cannot verify an instruction or permission, it should stop and explain what is missing. RASMISER tests these denial paths alongside the happy path, including session expiry, malicious tool results, and replayed requests.",
+        ],
+      },
+    ],
+    takeaway:
+      "An agent should be autonomous in reasoning, not unlimited in authority. Scope tools narrowly, validate actions on the server, and make every high-impact step observable and confirmable.",
+  },
+  {
+    slug: "ai-security-governance-updates-2026",
+    title: "The AI Security Governance Update: From Policy Documents to Release Gates",
+    excerpt:
+      "AI governance is becoming an engineering workflow. Turn new model-risk expectations into practical controls that developers can verify before every release.",
+    category: "AI Security",
+    author: "Priya Nair",
+    role: "Security Program Lead",
+    date: "2026-10-15",
+    readingTime: "6 min read",
+    image: "/images/blog/ai-security-standards.png",
+    imageAlt: "AI governance framework with security checks surrounding a mobile device",
+    intro:
+      "The latest AI security guidance is converging on a simple expectation: teams should be able to show how an AI feature is designed, tested, monitored, and contained. A policy document is useful, but it is not evidence that the production mobile binary handles hostile inputs safely.",
+    sections: [
+      {
+        heading: "What evidence looks like",
+        paragraphs: [
+          "Effective governance connects a model inventory to a shipped feature, its data sources, its tools, and its owners. It also records the tests that were run and the controls that prevent a model failure from becoming a security incident.",
+        ],
+      },
+      {
+        heading: "Make governance part of CI/CD",
+        paragraphs: ["A lightweight release gate can turn broad guidance into repeatable engineering practice."],
+        bullets: [
+          "Require an owner and data-flow record for every AI-powered feature",
+          "Scan dependencies, prompt templates, model configuration, and mobile secrets together",
+          "Run abuse cases for prompt injection, data leakage, insecure output handling, and excessive agency",
+          "Block releases when critical findings lack an approved mitigation or exception",
+          "Review telemetry after launch and feed new abuse cases back into the test suite",
+        ],
+      },
+      {
+        heading: "Security that follows the feature",
+        paragraphs: [
+          "RASMISER brings AI-specific checks into the same mobile security workflow as authentication, storage, and network testing. Teams get an auditable trail from finding to remediation, so governance keeps pace when models and prompts change.",
+        ],
+      },
+    ],
+    takeaway:
+      "AI governance is strongest when it is executable. Put ownership, abuse testing, release gates, and post-launch monitoring around every AI feature before it reaches users.",
+  },
+  {
     slug: "ai-generated-phishing-hyper-personalised-attacks-2026",
     title: "AI-Generated Phishing: Why Every Employee Is Now a High-Value Target",
     excerpt:
